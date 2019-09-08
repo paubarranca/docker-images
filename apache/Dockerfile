@@ -47,8 +47,8 @@ RUN a2ensite 000-default.conf
 
 WORKDIR /var/www/html/httpdocs
 
-# HEALTHCHECK --retries=3 --interval=5s --timeout=3s \
-#    CMD sh -e /usr/local/scripts/health-check.php
+HEALTHCHECK --retries=3 --interval=5s --timeout=3s \
+    CMD sh -e /usr/local/scripts/health-check.php
 
 EXPOSE 80
 
