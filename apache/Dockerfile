@@ -26,13 +26,13 @@ apt-get update && apt-get install -yq --no-install-recommends \
     php${PHP_V}-zip \
     php${PHP_V}-intl \
     php-imagick \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+    && apt-get clean && rm -rf /var/lib/apt/lists/* \
 
     # Install PHP composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
 
     # Enforce apache to send logs to stdout
-run ln -sf /dev/stdout /var/log/apache2/access.log && \
+    ln -sf /dev/stdout /var/log/apache2/access.log && \
     ln -sf /dev/stdout /var/log/apache2/error.log 
 
 RUN rm -f /etc/apache2/sites-available/000-default.conf
