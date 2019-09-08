@@ -7,7 +7,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV PHP_V=7.3
 
 # Install dependencies
-RUN apt -y --no-install-recommends install apt-transport-https ca-certificates && \
+RUN apt -y --no-install-recommends install apt-transport-https && \
 apt-get update && apt-get install -yq --no-install-recommends \
     apt-utils \
     apache2 \
