@@ -39,8 +39,8 @@ apt-get update && apt-get install -yq --no-install-recommends \
 RUN rm -f /etc/apache2/sites-available/000-default.conf
 COPY /apache2/000-default.conf /etc/apache2/sites-available/
 
-RUN a2dissite 000-default \
-a2ensite 000-default.conf
+RUN a2dissite 000-default
+RUN a2ensite 000-default.conf
 
 # Implement health-check
 RUN mkdir -p /usr/local/scripts/
