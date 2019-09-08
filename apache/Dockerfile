@@ -32,7 +32,6 @@ apt-get update && apt-get install -yq --no-install-recommends \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
 
     # Enforce apache to send logs to stdout
-    a2disconf other-vhosts-access-log && \
     ln -sf /dev/stdout /var/log/apache2/access.log && \
     ln -sf /dev/stdout /var/log/apache2/error.log && 
 
