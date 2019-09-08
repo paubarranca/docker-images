@@ -40,7 +40,7 @@ COPY /apache2/000-default.conf /etc/apache2/sites-available/
 
 WORKDIR /var/www/html/httpdocs
 
-HEALTHCHECK --retries=3 --interval=5s --timeout=3s curl -f http://localhost || exit 1
+# HEALTHCHECK --retries=3 --interval=5s --timeout=3s curl -f http://localhost || exit 1
 
 EXPOSE 80
 
