@@ -4,7 +4,7 @@ MAINTAINER Pau Barranca <paubarrancamon@gmail.com>
 LABEL name="paubarranca/debian-apache-php:latest"
 
 ENV DEBIAN_FRONTEND=noninteractive
-ENV PHP_V=7.3
+ENV PHP_V=7.2
 
 # Install dependencies
 RUN apt -y --no-install-recommends install apt-transport-https && \
@@ -38,9 +38,13 @@ run ln -sf /dev/stdout /var/log/apache2/access.log && \
 RUN rm -f /etc/apache2/sites-available/000-default.conf
 COPY /apache2/000-default.conf /etc/apache2/sites-available/
 
+RUN mkdir -p /usr/local/scripts/
+COPY /apache2/health-check.php /usr/local/scripts/
+
 WORKDIR /var/www/html/httpdocs
 
-# HEALTHCHECK --retries=3 --interval=5s --timeout=3s curl -f http://localhost || exit 1
+# HEALTHCHECK --retries=3 --interval=5s --timeout=3s \
+    CMD sh -e /usr/local/scripts/health-check.php
 
 EXPOSE 80
 
