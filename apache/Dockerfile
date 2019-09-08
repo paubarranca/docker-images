@@ -10,8 +10,8 @@ ENV PHP_V=7.2
 RUN apt -y --no-install-recommends install apt-transport-https && \
 apt-get update && apt-get install -yq --no-install-recommends \
     apt-utils \
-    apache2 \
-    libapache2-mod-${PHP_V} \
+    apache2 ibapache2-mod-authnz-external libapache2-mod-geoip \
+    libapache2-mod-php${PHP_V} \
     php${PHP_V}-cli \
     php${PHP_V}-json \
     php${PHP_V}-curl \
@@ -44,7 +44,7 @@ COPY /apache2/health-check.php /usr/local/scripts/
 WORKDIR /var/www/html/httpdocs
 
 # HEALTHCHECK --retries=3 --interval=5s --timeout=3s \
-    CMD sh -e /usr/local/scripts/health-check.php
+#    CMD sh -e /usr/local/scripts/health-check.php
 
 EXPOSE 80
 
