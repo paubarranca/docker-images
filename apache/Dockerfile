@@ -7,7 +7,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV PHP_V=7.3
 
 # Install dependencies
-RUN apt -y --no-install-recommends install apt-transport-https && \
+RUN apt -y --no-install-recommends install apt-utils apt-transport-https && \
 apt-get update && apt-get install -yq --no-install-recommends \
     apt-utils \
     apache2 libapache2-mod-authnz-external libapache2-mod-geoip \
@@ -35,11 +35,15 @@ apt-get update && apt-get install -yq --no-install-recommends \
     ln -sf /dev/stdout /var/log/apache2/access.log && \
     ln -sf /dev/stdout /var/log/apache2/error.log 
 
+# Copy modified vHost
 RUN rm -f /etc/apache2/sites-available/000-default.conf
 COPY /apache2/000-default.conf /etc/apache2/sites-available/
 
+# Implement health-check
 RUN mkdir -p /usr/local/scripts/
 COPY /apache2/health-check.php /usr/local/scripts/
+RUN a2dissite 000-default
+RUN a2ensite 000-default.conf
 
 WORKDIR /var/www/html/httpdocs
 
