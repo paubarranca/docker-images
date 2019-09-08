@@ -6,6 +6,7 @@ LABEL name="paubarranca/debian-apache-php:latest"
 ENV DEBIAN_FRONTEND=noninteractive
 ENV PHP_V=7.3
 
+# Install dependencies
 RUN apt -y --no-install-recommends install apt-transport-https ca-certificates && \
 apt-get update && apt-get install -yq --no-install-recommends \
     apt-utils \
@@ -26,6 +27,11 @@ apt-get update && apt-get install -yq --no-install-recommends \
     php${PHP_V}-intl \
     php-imagick \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+    # Enforce apache to send logs to stdout
+    a2disconf other-vhosts-access-log && \
+    ln -sf /dev/stdout /var/log/apache2/access.log && \
+    ln -sf /dev/stdout /var/log/apache2/error.log && \
 
 RUN rm -f /etc/apache2/sites-available/000-default.conf
 COPY /apache2/000-default.conf /etc/apache2/sites-available/
