@@ -49,7 +49,7 @@ COPY /apache2/health-check.php /usr/local/scripts/
 HEALTHCHECK --retries=3 --interval=5s --timeout=3s \
     CMD sh -e /usr/local/scripts/health-check.php
 
-WORKDIR /var/www/html/httpdocs
+WORKDIR /var/www/httpdocs
 
 EXPOSE 80
 
