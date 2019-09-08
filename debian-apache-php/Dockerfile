@@ -29,11 +29,11 @@ apt-get update && apt-get install -yq --no-install-recommends \
     && apt-get clean && rm -rf /var/lib/apt/lists/* \
 
     # Install PHP composer
-     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
+    curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
 
     # Enforce apache to send logs to stdout
     ln -sf /dev/stdout /var/log/apache2/access.log && \
-    ln -sf /dev/stdout /var/log/apache2/error.log 
+    ln -sf /dev/stdout /var/log/apache2/error.log
 
 # Copy modified vHost
 RUN rm -f /etc/apache2/sites-available/000-default.conf
