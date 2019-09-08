@@ -33,7 +33,7 @@ apt-get update && apt-get install -yq --no-install-recommends \
 
     # Enforce apache to send logs to stdout
     ln -sf /dev/stdout /var/log/apache2/access.log && \
-    ln -sf /dev/stdout /var/log/apache2/error.log && 
+    ln -sf /dev/stdout /var/log/apache2/error.log 
 
 RUN rm -f /etc/apache2/sites-available/000-default.conf
 COPY /apache2/000-default.conf /etc/apache2/sites-available/
