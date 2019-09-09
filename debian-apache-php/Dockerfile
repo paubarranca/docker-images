@@ -36,7 +36,8 @@ apt-get update && apt-get install -yq --no-install-recommends \
     ln -sf /dev/stdout /var/log/apache2/error.log
 
 # Copy modified vHost
-RUN rm -f /etc/apache2/sites-available/000-default.conf
+RUN rm -f /etc/apache2/sites-available/000-default.conf \
+    rm -rf /var/www/html
 COPY /apache2/000-default.conf /etc/apache2/sites-available/
 
 RUN a2dissite 000-default
@@ -47,7 +48,7 @@ RUN mkdir -p /usr/local/scripts/
 COPY /apache2/health-check.php /usr/local/scripts/
 
 HEALTHCHECK --retries=3 --interval=5s --timeout=3s \
-    CMD sh -e /usr/local/scripts/health-check.php
+    CMD /usr/bin/php${PHP_V} /usr/local/scripts/health-check.php
 
 WORKDIR /var/www/httpdocs
 
