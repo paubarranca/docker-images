@@ -23,4 +23,4 @@ COPY entrypoint.sh /root/entrypoint.sh
 
 EXPOSE 80 443
 
-ENTRYPOINT 
+ENTRYPOINT [ "/root/entrypoint.sh" ]
