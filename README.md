@@ -1,4 +1,4 @@
-# Custom Docker images
+# Custom Docker Images
 
 ![alt text](https://i2.wp.com/blog.ichasco.com/wp-content/uploads/2017/06/compose-1-1.png?resize=453%2C261&ssl=1)
 
