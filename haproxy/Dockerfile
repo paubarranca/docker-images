@@ -3,13 +3,24 @@ FROM alpine:3.10
 MAINTAINER Pau Barranca <paubarrancamon@gmail.com>
 LABEL name="paubarranca/haproxy:latest"
 
+ENV HAPROXY_USER=haproxy
+ENV HAPROXY_GROUP=haproxy
+
 # Install dependencies
 RUN apk update && \
-    apk --no-cache add tini haproxy py-pip build-base python-dev ca-certificates
+    apk --no-cache add tini haproxy py-pip build-base python python-dev ca-certificates \
+    rm -rf /etc/haproxy/haproxy.cfg \
+    rm -rf /var/cache/apk/* \
+    rm -rf /var/lib/apt/lists/* \
 
-# Copy Modified config
+    # Enforce haproxy to send logs to stdout
+    ln -sf /dev/stdout /var/log/haproxy/access.log && \
+    ln -sf /dev/stdout /var/log/haproxy/error.log
+
+# Copy Modified config & entrypoint.sh
 COPY haproxy.cfg /etc/haproxy/haproxy.cfg
+COPY entrypoint.sh /root/entrypoint.sh
 
 EXPOSE 80 443
 
-CMD ["-f", "/etc/haproxy/haproxy.cfg"]
+ENTRYPOINT 
