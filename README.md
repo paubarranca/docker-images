@@ -1,6 +1,6 @@
 # Custom Docker images
 
-![alt text](http://dondocker.com/wp-content/uploads/2016/05/compose.png)
+![alt text](https://i2.wp.com/blog.ichasco.com/wp-content/uploads/2017/06/compose-1-1.png?resize=453%2C261&ssl=1)
 
 This repository contains Dockerfiles and different resources to create custom containers images, including the base code, scripts, config files... and the Dockerfiles.
 
