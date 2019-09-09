@@ -7,6 +7,6 @@ This repository contains Dockerfiles and different resources to create custom co
 Images
 ------
 
-All the images are available at Docker Hub at [paubarranca](https://hub.docker.com/?namespace=paubarranca), feel free to use them ;)
+All the images are available in Docker Hub at [paubarranca](https://hub.docker.com/?namespace=paubarranca), feel free to use them ;)
 
 Please use a tagged image that works for you as v1, v2... DO NOT USE the latest tag in any of the images!
