@@ -45,7 +45,8 @@ RUN a2ensite 000-default.conf
 
 # Implement health-check
 RUN mkdir -p /usr/local/scripts/
-COPY /apache2/health-check.php /usr/local/scripts/
+COPY /apache2/health-check.php /usr/local/scripts/ \
+    entrypoint.sh /root/entrypoint.sh
 
 HEALTHCHECK --retries=3 --interval=5s --timeout=3s \
     CMD /usr/bin/php${PHP_V} /usr/local/scripts/health-check.php
@@ -53,5 +54,7 @@ HEALTHCHECK --retries=3 --interval=5s --timeout=3s \
 WORKDIR /var/www/httpdocs
 
 EXPOSE 80
+
+ENTRYPOINT ["/root/entrypoint.sh"]
 
 CMD apachectl -D FOREGROUND 
