@@ -14,8 +14,8 @@ RUN apk update && \
     rm -rf /var/lib/apt/lists/* \
 
     # Enforce haproxy to send logs to stdout
-    ln -sf /dev/stdout /var/log/haproxy/access.log && \
-    ln -sf /dev/stdout /var/log/haproxy/error.log
+    # ln -sf /dev/stdout /var/log/haproxy/access.log && \
+    # ln -sf /dev/stdout /var/log/haproxy/error.log
 
 # Copy Modified config & entrypoint.sh
 COPY haproxy.cfg /etc/haproxy/haproxy.cfg
