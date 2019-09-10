@@ -1,12 +1,12 @@
 svc:
-    demosite1:
+    test:
         domains:
-            - demosite1.com
+            - testing.com
         port: 82
         auth:
         tls: rewrite
 
-default_site: 'demosite'
+default_site: 'test'
 
 
 auth_users:

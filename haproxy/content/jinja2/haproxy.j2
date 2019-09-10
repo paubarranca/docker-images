@@ -7,7 +7,7 @@ global
     group haproxy
     daemon
 
-    # rewrite sercure TLS 
+    # force secure TLS 
     {%- if insecure is defined %}
     {% else %}
     # set default parameters to the intermediate configuration
@@ -27,6 +27,7 @@ defaults
     mode http
     option  httplog
     option dontlognull
+    option redispatch
     option forwardfor
     option http-server-close
     option abortonclose
@@ -91,7 +92,7 @@ frontend https-in
       {%- endif %}
 {%- endfor %}
 
-# Backends from yaml
+# Backends per site
 {%- for site in svc %}
 backend backend_{{ site }}
         balance leastconn
