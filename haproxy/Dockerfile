@@ -11,7 +11,12 @@ RUN apk update && \
     apk --no-cache add tini haproxy py-pip build-base PyYAML j2 j2cli python python-dev python-resources \
     rm -rf /etc/haproxy/haproxy.cfg \
     rm -rf /var/cache/apk/* \
-    rm -rf /var/lib/apt/lists/* \
+    rm -rf /var/lib/apt/lists/*
+
+RUN groupadd --system ${HAPROXY_GROUP}
+useradd --system --gid ${HAPROXY_GROUP} ${HAPROXY_USER}
+mkdir --parents /var/lib/${HAPROXY_USER}
+chown -R ${HAPROXY_USER}:${HAPROXY_GROUP} /var/lib/${HAPROXY_USER}
 
 # Copy jinja template
 COPY /content/jinja2/ /jinja2/
