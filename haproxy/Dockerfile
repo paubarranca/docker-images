@@ -20,6 +20,7 @@ RUN apk update && \
 # Copy Modified config & entrypoint.sh
 COPY haproxy.cfg /etc/haproxy/haproxy.cfg
 COPY entrypoint.sh /root/entrypoint.sh
+RUN chmod +x /root/entrypoint.sh
 
 EXPOSE 80 443
 
