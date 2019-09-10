@@ -13,7 +13,7 @@ RUN apk update && \
     rm -rf /var/cache/apk/* \
     rm -rf /var/lib/apt/lists/*
 
-RUN addgroup --system ${HAPROXY_GROUP} \
+RUN groupadd --system ${HAPROXY_GROUP} \
 adduser --system --gid ${HAPROXY_GROUP} ${HAPROXY_USER} \
 mkdir --parents /var/lib/${HAPROXY_USER} \
 chown -R ${HAPROXY_USER}:${HAPROXY_GROUP} /var/lib/${HAPROXY_USER}
