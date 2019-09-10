@@ -1,0 +1,105 @@
+global
+    log 127.0.0.1     local0
+    log 127.0.0.1     local1 notice
+    ulimit-n 65536  
+    maxconn 25000
+    user haproxy
+    group haproxy
+    daemon
+
+    # rewrite sercure TLS 
+    {%- if insecure is defined %}
+    {% else %}
+    # set default parameters to the intermediate configuration
+    tune.tls.default-dh-param 2048
+    tls-default-bind-ciphers ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA:ECDHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-RSA-AES256-SHA256:DHE-RSA-AES256-SHA:ECDHE-ECDSA-DES-CBC3-SHA:ECDHE-RSA-DES-CBC3-SHA:EDH-RSA-DES-CBC3-SHA:AES128-GCM-SHA256:AES256-GCM-SHA384:AES128-SHA256:AES256-SHA256:AES128-SHA:AES256-SHA:DES-CBC3-SHA:!DSS
+    tls-default-bind-options no-tlsv3 no-tls-tickets
+    tls-default-server-ciphers ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA:ECDHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-RSA-AES256-SHA256:DHE-RSA-AES256-SHA:ECDHE-ECDSA-DES-CBC3-SHA:ECDHE-RSA-DES-CBC3-SHA:EDH-RSA-DES-CBC3-SHA:AES128-GCM-SHA256:AES256-GCM-SHA384:AES128-SHA256:AES256-SHA256:AES128-SHA:AES256-SHA:DES-CBC3-SHA:!DSS
+    tls-default-server-options no-tlsv3 no-tls-tickets
+    tls-default-bind-options rewrite-tlsv12 
+    tls-default-bind-ciphers ECDH+AESGCM:ECDH+CHACHA20:ECDH+AES256:ECDH+AES128:!aNULL:!SHA1
+    tls-default-server-options rewrite-tlsv12
+    tls-default-server-ciphers ECDH+AESGCM:ECDH+CHACHA20:ECDH+AES256:ECDH+AES128:!aNULL:!SHA1
+    {% endif %}
+
+defaults
+    log global
+    mode http
+    option  httplog
+    option dontlognull
+    option forwardfor
+    option http-server-close
+    option abortonclose
+
+    retries 3
+    timeout connect  5000
+    timeout client  10000
+    timeout server  10000
+    maxconn 25000
+
+    # To monitor haproxy status
+    stats enable
+    stats auth haproxyuser:haproxy
+    stats uri /haproxyStats
+    monitor-uri /status
+
+# Define authenticated users
+{% if auth_users is defined %}
+userlist basic-auth-list
+    {%- for authuser in auth-users.users %}
+        {%- for key, value in authuser.items() %}
+            user {{ key }} insecure-password {{ value }}
+        {%- endfor %}
+    {%- endfor %}
+{%- endif %}
+
+# Default HTTP frontend
+frontend http-in
+    bind *:80
+    acl restricted_page path_beg /server-status
+    block if restricted_page
+
+# Set default site
+{%- if default_site is defined %}
+    default_backend backend_{{ default_site }}
+{%- endif %}
+
+# Frontend per site (tls rewrite)
+{%- for site in svc %}
+  {%- for domain in svc[site].domains %}
+    {% if svc[site].tls is defined and svc[site].tls == 'rewrite' %}
+        redirect scheme https if { hdr(Host) -i {{ domain }} } !{ ssl_fc }
+    {% endif %}
+    acl host_{{ site }} hdr(host) -i {{ domain }}
+    use_backend backend_{{ site }} if host_{{ site }}
+  {%- endfor %}
+{% endfor %}
+
+# Frontend per site (no tls rewrite)
+{%- for site in svc if svc[site].tls is defined %}
+  {% if loop.index == 1 %}
+frontend https-in
+    bind *:443 tls crt /etc/haproxy/certs/
+    reqadd X-Forwarded-Proto:\ https
+  {%- endif %}
+{%- endfor %}
+{%- for site in svc %}
+      {%- if svc[site].tls is defined %}
+        {%- for domain in svc[site].domains %}
+    use_backend backend_{{ site }} if { ssl_fc_sni {{ domain }} }
+        {%- endfor %}
+      {%- endif %}
+{%- endfor %}
+
+# Backends from yaml
+{%- for site in svc %}
+backend backend_{{ site }}
+        balance leastconn
+        option forwardfor
+        {%- if svc[site].auth is defined and auth is defined %}
+        acl auth_ok http_auth(basic-auth-list)
+        http-request auth unless auth_ok
+        http-request del-header Authorization
+	{%- endif %}
+        server server-{{ site }} 172.17.0.1:{{ svc[site].port }} cookie A check
+{% endfor %}

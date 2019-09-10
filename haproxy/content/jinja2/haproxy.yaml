@@ -1,0 +1,15 @@
+svc:
+    demosite1:
+        domains:
+            - demosite1.com
+        port: 82
+        auth:
+        tls: rewrite
+
+default_site: 'demosite'
+
+
+auth_users:
+        users:
+            - user1: password1
+            - user2: password2
