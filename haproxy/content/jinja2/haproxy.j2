@@ -3,6 +3,7 @@ global
     log 127.0.0.1     local1 notice
     ulimit-n 65536  
     maxconn 25000
+    debug
     user haproxy
     group haproxy
     daemon
@@ -92,7 +93,7 @@ frontend https-in
       {%- endif %}
 {%- endfor %}
 
-# Backends per site
+# Backend per site
 {%- for site in svc %}
 backend backend_{{ site }}
         balance leastconn
