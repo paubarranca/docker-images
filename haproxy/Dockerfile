@@ -21,7 +21,7 @@ RUN mkdir -p /var/lib/${HAPROXY_USER} \
 && chown -R ${HAPROXY_USER}:${HAPROXY_GROUP} /var/lib/${HAPROXY_USER}
 
 # Copy jinja template
-COPY /content/jinja2/ /jinja2/
+COPY /content/jinja2/ /root/jinja2/
 
 # Copy entrypoint.sh
 COPY /content/entrypoint.sh /root/entrypoint.sh
