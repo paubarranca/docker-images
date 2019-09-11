@@ -1,7 +1,7 @@
-svc:
+rules:
     dev:
         domains:
-            - test.zobalo.com
+            - dev.zobalo.com
         port: 81
         auth:
         tls: rewrite

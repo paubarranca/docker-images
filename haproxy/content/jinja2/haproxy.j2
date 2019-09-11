@@ -67,9 +67,9 @@ frontend http-in
 {%- endif %}
 
 # Frontend per site (tls rewrite)
-{%- for site in svc %}
-  {%- for domain in svc[site].domains %}
-    {% if svc[site].tls is defined and svc[site].tls == 'rewrite' %}
+{%- for site in rules %}
+  {%- for domain in rules[site].domains %}
+    {% if rules[site].tls is defined and rules[site].tls == 'rewrite' %}
         redirect scheme https if { hdr(Host) -i {{ domain }} } !{ ssl_fc }
     {% endif %}
     acl host_{{ site }} hdr(host) -i {{ domain }}
@@ -78,30 +78,30 @@ frontend http-in
 {% endfor %}
 
 # Frontend per site (no tls rewrite)
-{%- for site in svc if svc[site].tls is defined %}
+{%- for site in rules if rules[site].tls is defined %}
   {% if loop.index == 1 %}
 frontend https-in
     bind *:443 ssl crt /etc/haproxy/certs/
     http-request add-header X-Forwarded-Proto https
   {%- endif %}
 {%- endfor %}
-{%- for site in svc %}
-      {%- if svc[site].tls is defined %}
-        {%- for domain in svc[site].domains %}
+{%- for site in rules %}
+      {%- if rules[site].tls is defined %}
+        {%- for domain in rules[site].domains %}
     use_backend backend_{{ site }} if { ssl_fc_sni {{ domain }} }
         {%- endfor %}
       {%- endif %}
 {%- endfor %}
 
 # Backend per site
-{%- for site in svc %}
+{%- for site in rules %}
 backend backend_{{ site }}
         balance leastconn
         option forwardfor
-        {%- if svc[site].auth is defined and auth is defined %}
+        {%- if rules[site].auth is defined and auth is defined %}
         acl auth_ok http_auth(basic-auth-list)
         http-request auth unless auth_ok
         http-request del-header Authorization
 	{%- endif %}
-        server server-{{ site }} 172.17.0.1:{{ svc[site].port }} cookie A check
+        server server-{{ site }} 172.17.0.1:{{ rules[site].port }} cookie A check
 {% endfor %}
