@@ -39,7 +39,7 @@ If you want to enable HTTPS, remember to put the certificate + CA certificates +
 
 ### Jinja2 YAML file
 
-To configure your custom haproxy.yaml file you need to use the variables that i have defined, i will explain what some of them do
+To configure your custom haproxy.yaml file you need to use the variables that i have defined
 
     rules:
         dev:
