@@ -30,7 +30,7 @@ The haproxy uses jinja2 and a .yaml configuration file to automate the haproxy c
             - "80:80"
             - "443:44"
 
-![](https://i2.wp.com/blog.ichasco.com/wp-content/uploads/2017/06/compose-1-1.png?resize=453%2C261&ssl=1)
+![docker-compose](https://user-images.githubusercontent.com/49031072/64709154-14d2b380-d4b6-11e9-8613-ee343a9e4cce.png)
 
 To use your own yaml file, you have to set these volume `- /srv/haproxy/yaml/:/root/jinja2/yaml`, if you only want to test the haproxy container, comment it `$ - /srv/haproxy/yaml/:/root/jinja2/yaml`.
 
@@ -60,6 +60,8 @@ To configure your custom haproxy.yaml file you need to use the variables that i 
     auth_users:
             users:
                 - test: mypasswd
+
+![jinja](https://user-images.githubusercontent.com/49031072/64709120-05536a80-d4b6-11e9-80a0-1bdad154e3cb.jpg)
 
 To implement https traffic in one of the sites the variable `tls` must exist, if you want to rewrite http traffic to https then it must look like this `tls: rewrite`.
 
