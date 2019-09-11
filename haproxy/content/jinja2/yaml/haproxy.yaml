@@ -2,13 +2,13 @@ svc:
     dev:
         domains:
             - test.zobalo.com
-        port: 80
+        port: 81
         auth:
         tls: rewrite
     prod:
         domains:
             - zobalo.com
-        port: 81
+        port: 82
         tls: rewrite
 
 

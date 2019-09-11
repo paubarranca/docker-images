@@ -82,7 +82,7 @@ frontend http-in
   {% if loop.index == 1 %}
 frontend https-in
     bind *:443 ssl crt /etc/haproxy/certs/
-    http-request add-header X-Forwarded-Proto:\ https
+    http-request add-header X-Forwarded-Proto https
   {%- endif %}
 {%- endfor %}
 {%- for site in svc %}
