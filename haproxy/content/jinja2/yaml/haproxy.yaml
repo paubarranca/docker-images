@@ -1,0 +1,19 @@
+svc:
+    dev:
+        domains:
+            - test.zobalo.com
+        port: 80
+        auth:
+        tls: rewrite
+    prod:
+        domains:
+            - zobalo.com
+        port: 81
+        tls: rewrite
+
+
+default_site: 'prod'
+
+auth_users:
+        users:
+            - test: mypasswd

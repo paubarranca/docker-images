@@ -8,13 +8,15 @@ ENV HAPROXY_GROUP=haproxy
 
 # Install dependencies
 RUN apk update && \
-    apk --no-cache add tini haproxy py-pip build-base PyYAML j2 j2cli python python-dev python-resources \
-    rm -rf /etc/haproxy/haproxy.cfg \
+    apk --no-cache add tini haproxy python python-dev py-pip \
+    && pip install haproxyctl j2 j2cli python-resources PyYAML \
+    && rm -rf /etc/haproxy/haproxy.cfg \
     rm -rf /var/cache/apk/* \
     rm -rf /var/lib/apt/lists/*
 
+# Securing /var/lib
 # RUN addgroup -S ${HAPROXY_GROUP} \
-# && adduser -S -G ${HAPROXY_GROUP} ${HAPROXY_USER} \
+# && adduser -S -G ${HAPROXY_GROUP} ${HAPROXY_USER}
 RUN mkdir -p /var/lib/${HAPROXY_USER} \
 && chown -R ${HAPROXY_USER}:${HAPROXY_GROUP} /var/lib/${HAPROXY_USER}
 
