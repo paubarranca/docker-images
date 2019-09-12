@@ -12,10 +12,6 @@ ENV REDIS_DATA_DIR=/var/lib/redis/ \
     REDIS_LOG_DIR=/var/log/redis/ \
     REDIS_SOCKET_DIR=/var/run/redis/
 
-# Redis Performance
-#RUN echo 'sysctl -w net.core.somaxconn=65365' >> /etc/rc.local \
-#    && echo 'vm.overcommit_memory = 1' >> /etc/sysctl.conf \
-
 # Made by sameersbn (https://github.com/sameersbn/docker-redis)
 RUN apt-get update \
     && apt-get install -y redis-server \
