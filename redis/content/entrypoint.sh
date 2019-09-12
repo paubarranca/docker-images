@@ -1,6 +1,7 @@
 #!/bin/bash
 set -e
 
+# Made by sameersbn (https://github.com/sameersbn/docker-redis)
 REDIS_PASSWORD=${REDIS_PASSWORD:-}
 
 map_redis_uid() {
