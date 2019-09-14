@@ -1,7 +1,7 @@
 Custom Docker Images ![](https://img.shields.io/github/stars/paubarranca/docker-images) ![](https://img.shields.io/github/forks/paubarranca/docker-images) ![](https://img.shields.io/github/release//paubarranca/docker-images)
 =============
 
-This repository contains Dockerfiles and different resources to create custom containers images, including the Dockerfiles, scripts, config files... 
+This repository contains Dockerfiles to create custom images and the rersources that i use to create them, including the Dockerfiles, scripts, config files... 
 
 All the images are available in Docker Hub at [paubarranca](https://hub.docker.com/?namespace=paubarranca), feel free to use them ;)
 
@@ -32,14 +32,14 @@ The haproxy uses jinja2 and a YAML configuration file to automate the haproxy co
 
 ![docker-compose](https://user-images.githubusercontent.com/49031072/64709154-14d2b380-d4b6-11e9-8613-ee343a9e4cce.png)
 
-To use your own yaml file, you have to set these volume `- /srv/haproxy/yaml/:/root/jinja2/yaml`, to run the container with the default YAML comment it `# - /srv/haproxy/yaml/:/root/jinja2/yaml`.
+To use your own YAML file, you have to set these volume `- /srv/haproxy/yaml/:/root/jinja2/yaml`, to run the container with the default YAML comment it `# - /srv/haproxy/yaml/:/root/jinja2/yaml`.
 
 If you want to enable HTTPS, remember to put the certificate + CA certificates + key in a single .pem file, located in the path of the docker volume `/srv/haproxy/certs`.
 
 
 ### Jinja2 YAML file
 
-To configure your custom haproxy.yaml file you need to use the variables that i have defined
+To configure your custom haproxy.yaml file you need to use the variables that i have defined:
 
     rules:
         dev:
