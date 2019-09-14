@@ -1,7 +1,7 @@
 Custom Docker Images ![](https://img.shields.io/github/stars/paubarranca/docker-images) ![](https://img.shields.io/github/forks/paubarranca/docker-images) ![](https://img.shields.io/github/release//paubarranca/docker-images)
 =============
 
-This repository contains Dockerfiles to create custom images and the rersources that i use to create them, including scripts, config files... 
+This repository contains Dockerfiles to create custom images and the resources that i use to create them, including scripts, config files... 
 
 All the images are available in Docker Hub at [paubarranca](https://hub.docker.com/?namespace=paubarranca), feel free to use them ;)
 
