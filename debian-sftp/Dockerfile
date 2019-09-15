@@ -1,6 +1,7 @@
 FROM debian:10
 
 MAINTAINER Pau Barranca <paubarrancamon@gmail.com>
+LABEL name="paubarranca/debian-sftp:latest"
 
 ENV SFTP_LOG_SYS=/var/log/auth.log
 ENV SFTP_LOG_APP=/var/log/messages

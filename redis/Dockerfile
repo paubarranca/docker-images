@@ -1,6 +1,7 @@
 FROM debian:10
 
 MAINTAINER Pau Barranca <paubarrancamon@gmail.com>
+LABEL name="paubarranca/redis:latest"
 
 ENV DEBIAN_FRONTEND=noninteractive
 
