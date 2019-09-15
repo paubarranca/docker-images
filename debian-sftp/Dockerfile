@@ -10,7 +10,7 @@ ENV SFTP_LOG_APP=/var/log/messages
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
     openssh-server \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
 
     # Enforce SFTP to send logs to stdout
     && ln -sf /dev/stdout ${SFTP_LOG_SYS} \
