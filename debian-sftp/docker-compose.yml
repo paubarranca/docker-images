@@ -7,4 +7,4 @@ services:
     # volumes:
       # -/srv/sftp/user1:/home/user1/test
     ports:
-        - "2222:22"s
+        - "2222:22"

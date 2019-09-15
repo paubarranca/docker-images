@@ -25,4 +25,6 @@ COPY /content/sshd_config /etc/ssh/sshd_config
 
 EXPOSE 22
 
-ENTRYPOINT ["/root/entrypoint.sh"]
+# ENTRYPOINT ["/root/entrypoint.sh"]
+
+CMD /usr/sbin/sshd -D -e
