@@ -4,7 +4,7 @@ MAINTAINER Pau Barranca <paubarrancamon@gmail.com>
 LABEL name="paubarranca/debian-apache-php:latest"
 
 ENV DEBIAN_FRONTEND=noninteractive
-ENV PHP_V=7.3
+ENV PHP_V=7.4
 
 # Install dependencies
 RUN apt -y --no-install-recommends install apt-transport-https && \
