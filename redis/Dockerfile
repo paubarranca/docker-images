@@ -1,4 +1,4 @@
-FROM debian:10
+FROM debian:10-slim
 
 MAINTAINER Pau Barranca <paubarrancamon@gmail.com>
 LABEL name="paubarranca/redis:latest"
@@ -13,7 +13,6 @@ ENV REDIS_DATA_DIR=/var/lib/redis/ \
     REDIS_LOG_DIR=/var/log/redis/ \
     REDIS_SOCKET_DIR=/var/run/redis/
 
-# Made by sameersbn (https://github.com/sameersbn/docker-redis)
 RUN apt-get update \
     && apt-get install -y redis-server \
     && sed 's/^logfile /# logfile /' -i /etc/redis/redis.conf \
