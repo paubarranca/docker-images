@@ -27,8 +27,9 @@ if [[ -f $GIT_KEY ]]; then
 	echo -e "\nKey pair already exist... Skipping...\n"
 else
 	ssh-keygen -t rsa -N "" -f $GIT_KEY
-	echo -e "\nPublic key to add on github ssh keys:\n"
+	echo -e "\nPublic key to add on GitHub ssh keys:\n"
 	cat $GIT_KEY.pub
+    read -n 1 -s -r -p "\n\nPress enter when your key is added on GitHub ....."
 fi
 
 git remote rm origin
