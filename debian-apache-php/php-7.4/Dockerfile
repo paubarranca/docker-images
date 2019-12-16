@@ -1,15 +1,20 @@
-FROM debian:10-slim
+FROM debian:10.2-slim
 
 MAINTAINER Pau Barranca <paubarrancamon@gmail.com>
-LABEL name="paubarranca/debian-apache-php:latest"
+LABEL name="paubarranca/debian-apache-php:v7.4"
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV PHP_V=7.4
 
 # Install dependencies
-RUN apt -y --no-install-recommends install apt-transport-https && \
-apt-get update && apt-get install -yq --no-install-recommends \
-    apt-utils \
+RUN apt-get update && \
+    apt -y --no-install-recommends install lsb-release curl wget ca-certificates
+
+RUN wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg && \
+    echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/php.list
+
+RUN apt-get update && \
+    apt -y --no-install-recommends install php${PHP_V} \
     apache2 libapache2-mod-authnz-external \
     libapache2-mod-php${PHP_V} \
     php${PHP_V}-cli \

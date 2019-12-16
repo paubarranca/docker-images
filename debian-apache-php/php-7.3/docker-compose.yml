@@ -2,7 +2,7 @@ version: '3'
 services:
   front:
     container_name: front
-    image: paubarranca/debian-apache-php:php-7.3
+    image: paubarranca/debian-apache-php:v7.3
     restart: always
     volumes:
       -/srv/front/web:/var/www/httpdocs

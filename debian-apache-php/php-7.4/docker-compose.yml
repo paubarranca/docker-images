@@ -1,8 +1,8 @@
 version: '3'
 services:
-  redis:
+  front:
     container_name: front
-    image: paubarranca/debian-apache-php:v1
+    image: paubarranca/debian-apache-php:v7.4
     restart: always
     volumes:
       -/srv/front/web:/var/www/httpdocs

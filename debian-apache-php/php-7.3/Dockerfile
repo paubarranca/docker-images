@@ -1,4 +1,4 @@
-FROM debian:10-slim
+FROM debian:10.2-slim
 
 MAINTAINER Pau Barranca <paubarrancamon@gmail.com>
 LABEL name="paubarranca/debian-apache-php:v7.3"
