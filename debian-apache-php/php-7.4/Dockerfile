@@ -42,6 +42,7 @@ RUN apt-get update && \
 
 # Copy modified vHost
 RUN rm -f /etc/apache2/sites-available/000-default.conf \
+    rm -f /etc/apache2/sites-available/default-ssl.conf \
     rm -rf /var/www/html
 COPY /content/000-default.conf /etc/apache2/sites-available/
 
