@@ -7,7 +7,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV PHP_V=7.3
 
 # Install dependencies
-RUN apt-get update && \
+RUN apt update && \
     apt -y --no-install-recommends install lsb-release curl wget ca-certificates
 
 RUN wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg && \
@@ -48,6 +48,15 @@ ADD /content/000-default.conf /etc/apache2/sites-available/
 
 RUN a2dissite 000-default && \
     a2ensite 000-default.conf
+
+RUN mkdir /etc/apache2/custom.d && \
+   wget https://github.com/mitchellkrogza/apache-ultimate-bad-bot-blocker/raw/master/Apache_2.4/custom.d/globalblacklist.conf -O /etc/apache2/custom.d/globalblacklist.conf && \
+   wget https://raw.githubusercontent.com/mitchellkrogza/apache-ultimate-bad-bot-blocker/master/Apache_2.4/custom.d/bad-referrer-words.conf -O /etc/apache2/custom.d/bad-referrer-words.conf && \
+   wget https://github.com/mitchellkrogza/apache-ultimate-bad-bot-blocker/raw/master/Apache_2.4/custom.d/blacklist-ips.conf -O /etc/apache2/custom.d/blacklist-ips.conf && \
+   touch /etc/apache2/custom.d/blacklist-user-agents.conf \
+         /etc/apache2/custom.d/whitelist-domains.conf \
+         /etc/apache2/custom.d/bad-referrer-words.conf \
+         /etc/apache2/custom.d/whitelist-ips.conf
 
 RUN mkdir -p /usr/local/scripts/
 ADD /content/scripts/ /usr/local/scripts/

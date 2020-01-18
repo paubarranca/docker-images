@@ -1,0 +1,41 @@
+{% if PHP_MEM_LIMIT is defined %}
+memory_limit = {{ PHP_MEM_LIMIT }}
+{% endif %}
+
+{% if PHP_POST_MAX_SIZE is defined %}
+post_max_size = {{ PHP_POST_MAX_SIZE }}
+{% endif %}
+
+{% if PHP_UPLOAD_MAX_FILESIZE is defined %}
+upload_max_filesize = {{ PHP_UPLOAD_MAX_FILESIZE }}
+{% else %}
+upload_max_filesize = 20M
+{% endif %}
+
+{% if PHP_MAX_FILE_UPLOADS is defined %}
+max_file_uploads = {{ PHP_MAX_FILE_UPLOADS }}
+{% else %}
+max_file_uploads = 20
+{% endif %}
+
+{% if PHP_DISPLAY_ERRORS is defined and 'true' in PHP_DISPLAY_ERRORS %}
+display_errors = On
+display_startup_errors = Off
+{% else %}
+display_errors = Off
+display_startup_errors = Off
+{% endif %}
+
+log_errors = {{ PHP_ERROR_LOG_PATH }}
+error_log = {{ PHP_ERROR_LOG_PATH }}
+
+{% if PHP_MAX_EXECUTION_TIME is defined %}
+max_execution_time = {{ PHP_MAX_EXECUTION_TIME }}
+{% endif %}
+
+
+# Security enhancements
+
+{% if PHP_SECURITY is defined and 'true' in PHP_SECURITY }
+disable_functions = "exec,passthru,shell_exec,system,proc_open,popen,parse_ini_file,show_source"
+{% endif %}
