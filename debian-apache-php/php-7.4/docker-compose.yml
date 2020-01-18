@@ -1,10 +1,10 @@
 version: '3'
 services:
-  front:
-    container_name: front
+  apache:
+    container_name: apache
     image: paubarranca/debian-apache-php:v7.4
     restart: always
     volumes:
-      -/srv/front/web:/var/www/httpdocs
+      - /srv/apache/www:/var/www/httpdocs
     ports:
       - "80:80"

@@ -39,15 +39,15 @@ apt-get update && apt-get install -yq --no-install-recommends \
 RUN rm -f /etc/apache2/sites-available/000-default.conf \
     rm -f /etc/apache2/sites-available/default-ssl.conf \
     rm -rf /var/www/html
-COPY /content/000-default.conf /etc/apache2/sites-available/
+ADD /content/000-default.conf /etc/apache2/sites-available/
 
-RUN a2dissite 000-default
-RUN a2ensite 000-default.conf
+RUN a2dissite 000-default && \
+    a2ensite 000-default.conf
+
+RUN mkdir -p /usr/local/scripts/
+ADD /content/scripts/ /usr/local/scripts/
 
 # Implement health-check
-RUN mkdir -p /usr/local/scripts/
-COPY /content/health-check.php /usr/local/scripts/
-
 HEALTHCHECK --retries=3 --interval=5s --timeout=3s \
     CMD /usr/bin/php${PHP_V} /usr/local/scripts/health-check.php
 

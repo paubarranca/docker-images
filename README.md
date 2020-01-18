@@ -62,8 +62,6 @@ To configure your custom haproxy.yaml file you need to use the variables that i 
             users:
                 - test: mypasswd
 
-![jinja](https://user-images.githubusercontent.com/49031072/64709120-05536a80-d4b6-11e9-80a0-1bdad154e3cb.jpg)
-
 To implement https traffic in one of the sites the variable `tls` must exist, if you want to rewrite http traffic to https then it must look like this `tls: rewrite`.
 
 For user authentication it must be defined at `users` in the YAML file and add the `auth` in your site.
