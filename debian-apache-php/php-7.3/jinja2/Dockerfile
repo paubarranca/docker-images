@@ -4,7 +4,22 @@ MAINTAINER Pau Barranca <paubarrancamon@gmail.com>
 LABEL name="paubarranca/debian-apache-php:v7.3"
 
 ENV DEBIAN_FRONTEND=noninteractive
-ENV PHP_V=7.3
+
+# default jinja env variables
+ENV \ 
+   PHP_V="7.3"                                \
+   KEEPALIVE_MAX_REQUESTS="10000"           \
+   KEEPALIVE_TIMEOUT="650"                  \
+   APACHE_ENABLE_CORS="false"               \
+   APACHE_MAX_REQUEST_WORKERS="250"         \
+   APACHE_START_SERVERS="2"                 \
+   APACHE_DOCUMENTROOT="/var/www/httpdocs"  \
+   APACHE_ENABLE_BADBOTS="false"            \
+   APACHE_ENABLE_CSP="false"                \
+   PHP_MEM_LIMIT="128M"                     \
+   PHP_DISPLAY_ERRORS="on"                  \
+   PHP_ERROR_LOG_PATH="/dev/stdout/"        \
+   PHP_MAX_EXECUTION_TIME="60"
 
 # Install dependencies
 RUN apt -y --no-install-recommends install apt-transport-https && \
@@ -75,18 +90,3 @@ WORKDIR /var/www/httpdocs
 EXPOSE 80
 
 ENTRYPOINT ["/root/entrypoint.sh"]
-
-# default jinja env variables
-ENV \ 
-   KEEPALIVE_MAX_REQUESTS="10000"           \
-   KEEPALIVE_TIMEOUT="650"                  \
-   APACHE_ENABLE_CORS="false"               \
-   APACHE_MAX_REQUEST_WORKERS="250"         \
-   APACHE_START_SERVERS="2"                 \
-   APACHE_DOCUMENTROOT="/var/www/httpdocs"  \
-   APACHE_ENABLE_BADBOTS="false"            \
-   APACHE_ENABLE_CSP="false"                \
-   PHP_MEM_LIMIT="128M"                     \
-   PHP_DISPLAY_ERRORS="on"                  \
-   PHP_ERROR_LOG_PATH="/dev/stdout/"        \
-   PHP_MAX_EXECUTION_TIME="60"
