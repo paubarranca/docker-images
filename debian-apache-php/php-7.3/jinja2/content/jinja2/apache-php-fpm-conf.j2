@@ -6,11 +6,11 @@
     </IfModule>
 
     <LocationMatch "^(/phpfpm-status|health-check)$">
-        SetHandler "proxy:unix:/var/run/php{{ PHP_VERSION }}-fpm.sock|fcgi://localhost" 
+        SetHandler "proxy:unix:/var/run/php{{ PHP_V }}-fpm.sock|fcgi://localhost" 
     </LocationMatch>
 
     <FilesMatch ".+\.ph(p[3457]?|t|tml)$">
-        SetHandler "proxy:unix:/var/run/php{{ PHP_VERSION }}-fpm.sock|fcgi://localhost/"
+        SetHandler "proxy:unix:/var/run/php{{ PHP_V }}-fpm.sock|fcgi://localhost/"
     </FilesMatch>
 
     <FilesMatch ".+\.phps$">

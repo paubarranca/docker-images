@@ -1,14 +1,7 @@
 <VirtualHost *:80>
 	ServerAdmin admin@localhost
 	DocumentRoot {{ APACHE_DOCUMENTROOT }}
-        {%- if APACHE_VH_ALIAS is defined %}
-         {%- set alias_list = APACHE_VH_ALIAS.split(":") %}
-         {%- for alias in alias_list %}
-         {%- if alias != "/" %}
-        Alias {{ alias }} {{ APACHE_DOCUMENTROOT }}
-         {%- endif %}
-         {%- endfor %}
-        {%- endif %}
+   ServerName localhost
 
         <Directory {{ APACHE_DOCUMENTROOT }}>
            Options -Indexes +FollowSymLinks +MultiViews +Includes

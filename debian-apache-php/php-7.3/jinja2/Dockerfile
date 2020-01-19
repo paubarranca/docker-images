@@ -9,7 +9,7 @@ ENV PHP_V=7.3
 # Install dependencies
 RUN apt -y --no-install-recommends install apt-transport-https && \
     apt update && apt-get install -yq --no-install-recommends \
-    apt-utils python3-pip supervisor && \
+    apt-utils wget python3-pip supervisor && \
     pip3 install Jinja2 && \
     apt install -yq --no-install-recommends \
     apache2 libapache2-mod-authnz-external \
@@ -31,24 +31,24 @@ RUN apt -y --no-install-recommends install apt-transport-https && \
     && apt-get clean && rm -rf /var/lib/apt/lists/* \
 
     # Install PHP composer
-    curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+    curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
+
+    # Enforce apache to send logs to stdout
+    ln -sf /dev/stdout /var/log/apache2/access.log && \
+    ln -sf /dev/stdout /var/log/apache2/error.log
 
 # Delete default apache conf
 RUN rm -f /etc/apache2/sites-available/000-default.conf \
     rm -f /etc/apache2/sites-available/default-ssl.conf \
     rm -rf /var/www/html
 
-ADD /content/config/supervisord.conf /etc/supervisor/supervisord.conf
-
-RUN a2dismod mpm_prefork && \
+RUN a2dismod php${PHP_V} && \
+    a2dismod mpm_prefork && \
     a2enmod mpm_event && \
     a2enmod remoteip && \
     a2enmod proxy proxy_http proxy_balancer && \
-    a2enmod headers proxy_fcgi alias auth_basic
-
-    # Enforce apache to send logs to stdout
-    ln -sf /dev/stdout /var/log/apache2/access.log && \
-    ln -sf /dev/stdout /var/log/apache2/error.log
+    a2enmod headers proxy_fcgi auth_basic && \
+    a2enconf php${PHP_V}-fpm
 
 RUN mkdir /etc/apache2/custom.d && \
    wget https://github.com/mitchellkrogza/apache-ultimate-bad-bot-blocker/raw/master/Apache_2.4/custom.d/globalblacklist.conf -O /etc/apache2/custom.d/globalblacklist.conf && \
@@ -61,6 +61,8 @@ RUN mkdir /etc/apache2/custom.d && \
 
 RUN mkdir -p /usr/local/scripts/
 ADD /content/scripts/ /usr/local/scripts/
+ADD /content/jinja2/ /root/jinja2/
+ADD /content/config/supervisord.conf /etc/supervisor/supervisord.conf
 
 # Implement health-check
 HEALTHCHECK --retries=3 --interval=5s --timeout=3s \
@@ -70,4 +72,19 @@ WORKDIR /var/www/httpdocs
 
 EXPOSE 80
 
-CMD apachectl -D FOREGROUND 
+ENTRYPOINT ["/root/entrypoint.sh"]
+
+# default jinja env variables
+ENV \ 
+   KEEPALIVE_MAX_REQUESTS="10000"           \
+   KEEPALIVE_TIMEOUT="650"                  \
+   APACHE_ENABLE_CORS="false"               \
+   APACHE_MAX_REQUEST_WORKERS="250"         \
+   APACHE_START_SERVERS="2"                 \
+   APACHE_DOCUMENTROOT="/var/www/httpdocs"  \
+   APACHE_ENABLE_BADBOTS="false"            \
+   APACHE_ENABLE_CSP="false"                \
+   PHP_MEM_LIMIT="128M"                     \
+   PHP_DISPLAY_ERRORS="on"                  \
+   PHP_ERROR_LOG_PATH="/dev/stdout/"        \
+   PHP_MAX_EXECUTION_TIME="60"

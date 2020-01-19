@@ -2,7 +2,7 @@ version: '3'
 services:
   apache:
     container_name: apache
-    image: paubarranca/debian-apache-php:v7.3
+    image: paubarranca/debian-apache-php:v7.3-env
     restart: always
     volumes:
       - /srv/apache/www:/var/www/httpdocs

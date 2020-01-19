@@ -11,7 +11,7 @@
 ;;;;;;;;;;;;;;;;;;
 
 [global]
-pid = /var/run/php{{ PHP_VERSION }}-fpm.pid
+pid = /var/run/php{{ PHP_V }}-fpm.pid
 
 error_log = {{ PHP_ERROR_LOG_PATH }}
 
@@ -30,4 +30,4 @@ error_log = {{ PHP_ERROR_LOG_PATH }}
 ; Relative path can also be used. They will be prefixed by:
 ;  - the global prefix if it's been set (-p argument)
 ;  - /usr otherwise
-include=/etc/php/{{ PHP_VERSION }}/fpm/pool.d/*.conf
+include=/etc/php/{{ PHP_V }}/fpm/pool.d/*.conf
