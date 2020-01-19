@@ -9,7 +9,7 @@ ENV PHP_V=7.3
 # Install dependencies
 RUN apt -y --no-install-recommends install apt-transport-https && \
 apt update && apt-get install -yq --no-install-recommends \
-    apt-utils \
+    apt-utils wget \
     apache2 libapache2-mod-authnz-external \
     libapache2-mod-php${PHP_V} \
     php${PHP_V}-cli \

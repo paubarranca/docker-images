@@ -63,6 +63,8 @@ RUN mkdir -p /usr/local/scripts/
 ADD /content/scripts/ /usr/local/scripts/
 ADD /content/jinja2/ /root/jinja2/
 ADD /content/config/supervisord.conf /etc/supervisor/supervisord.conf
+ADD /content/entrypoint.sh /root/entrypoint.sh
+RUN chmod +x /root/entrypoint.sh
 
 # Implement health-check
 HEALTHCHECK --retries=3 --interval=5s --timeout=3s \

@@ -1,0 +1,10 @@
+version: '3'
+services:
+  apache:
+    container_name: apache
+    image: paubarranca/debian-apache-php:v7.4-env
+    restart: always
+    volumes:
+      - /srv/apache/www:/var/www/httpdocs
+    ports:
+      - "80:80"
