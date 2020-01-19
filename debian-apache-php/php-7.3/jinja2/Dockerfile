@@ -10,7 +10,7 @@ ENV PHP_V=7.3
 RUN apt -y --no-install-recommends install apt-transport-https && \
     apt update && apt-get install -yq --no-install-recommends \
     apt-utils wget python3-pip supervisor && \
-    pip3 install Jinja2 && \
+    pip3 install jinja2 j2cli && \
     apt install -yq --no-install-recommends \
     apache2 libapache2-mod-authnz-external \
     libapache2-mod-php${PHP_V} \
