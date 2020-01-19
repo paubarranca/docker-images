@@ -65,6 +65,7 @@ RUN a2dismod php${PHP_V} && \
     a2enmod headers proxy_fcgi auth_basic && \
     a2enconf php${PHP_V}-fpm
 
+
 # Set Badbots blacklist
 RUN mkdir /etc/apache2/custom.d && \
    wget https://github.com/mitchellkrogza/apache-ultimate-bad-bot-blocker/raw/master/Apache_2.4/custom.d/globalblacklist.conf -O /etc/apache2/custom.d/globalblacklist.conf && \
