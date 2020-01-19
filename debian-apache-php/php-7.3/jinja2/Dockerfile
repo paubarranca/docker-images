@@ -5,23 +5,24 @@ LABEL name="paubarranca/debian-apache-php:v7.3"
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-# default jinja env variables
+# Default jinja env variables
 ENV \ 
-   PHP_V="7.3"                                \
+   PHP_V="7.3"                              \
    KEEPALIVE_MAX_REQUESTS="10000"           \
    KEEPALIVE_TIMEOUT="650"                  \
    APACHE_ENABLE_CORS="false"               \
    APACHE_MAX_REQUEST_WORKERS="250"         \
    APACHE_START_SERVERS="2"                 \
-   APACHE_DOCUMENTROOT="/var/www/httpdocs"  \
+   APACHE_DOCUMENTROOT="/var/www/httpdocs/" \
+   APACHE_DIRECTORY_INDEX="index.php"       \
    APACHE_ENABLE_BADBOTS="false"            \
    APACHE_ENABLE_CSP="false"                \
    PHP_MEM_LIMIT="128M"                     \
    PHP_DISPLAY_ERRORS="on"                  \
    PHP_ERROR_LOG_PATH="/dev/stdout/"        \
-   PHP_MAX_EXECUTION_TIME="60"
+   PHP_MAX_EXECUTION_TIME="60"              
 
-# Install dependencies
+# Install apache, php & jinja
 RUN apt -y --no-install-recommends install apt-transport-https && \
     apt update && apt-get install -yq --no-install-recommends \
     apt-utils wget python3-pip supervisor && \
@@ -52,7 +53,7 @@ RUN apt -y --no-install-recommends install apt-transport-https && \
     ln -sf /dev/stdout /var/log/apache2/access.log && \
     ln -sf /dev/stdout /var/log/apache2/error.log
 
-# Delete default apache conf
+# Delete default apache site conf
 RUN rm -f /etc/apache2/sites-available/000-default.conf \
     rm -f /etc/apache2/sites-available/default-ssl.conf \
     rm -rf /var/www/html
@@ -60,11 +61,11 @@ RUN rm -f /etc/apache2/sites-available/000-default.conf \
 RUN a2dismod php${PHP_V} && \
     a2dismod mpm_prefork && \
     a2enmod mpm_event && \
-    a2enmod remoteip && \
     a2enmod proxy proxy_http proxy_balancer && \
     a2enmod headers proxy_fcgi auth_basic && \
     a2enconf php${PHP_V}-fpm
 
+# Set Badbots blacklist
 RUN mkdir /etc/apache2/custom.d && \
    wget https://github.com/mitchellkrogza/apache-ultimate-bad-bot-blocker/raw/master/Apache_2.4/custom.d/globalblacklist.conf -O /etc/apache2/custom.d/globalblacklist.conf && \
    wget https://raw.githubusercontent.com/mitchellkrogza/apache-ultimate-bad-bot-blocker/master/Apache_2.4/custom.d/bad-referrer-words.conf -O /etc/apache2/custom.d/bad-referrer-words.conf && \
@@ -74,18 +75,19 @@ RUN mkdir /etc/apache2/custom.d && \
          /etc/apache2/custom.d/bad-referrer-words.conf \
          /etc/apache2/custom.d/whitelist-ips.conf
 
+# Copy content
 RUN mkdir -p /usr/local/scripts/
 ADD /content/scripts/ /usr/local/scripts/
 ADD /content/jinja2/ /root/jinja2/
 ADD /content/config/supervisord.conf /etc/supervisor/supervisord.conf
 ADD /content/entrypoint.sh /root/entrypoint.sh
-RUN chmod +x /root/entrypoint.sh
+RUN chmod 755 /root/entrypoint.sh
 
 # Implement health-check
 HEALTHCHECK --retries=3 --interval=5s --timeout=3s \
     CMD /usr/bin/php${PHP_V} /usr/local/scripts/health-check.php
 
-WORKDIR /var/www/httpdocs
+WORKDIR ${APACHE_DOCUMENTROOT}
 
 EXPOSE 80
 

@@ -1,23 +1,24 @@
 <VirtualHost *:80>
 	ServerAdmin admin@localhost
-	DocumentRoot {{ APACHE_DOCUMENTROOT }}
    ServerName localhost
+   DocumentRoot {{ APACHE_DOCUMENTROOT }}
+   DirectoryIndex {{ APACHE_DIRECTORY_INDEX }}
 
-        <Directory {{ APACHE_DOCUMENTROOT }}>
-           Options -Indexes +FollowSymLinks +MultiViews +Includes
-           AllowOverride All
-           Order allow,deny
-           allow from all
-        {% if APACHE_ENABLE_BADBOTS is defined and 'true' in APACHE_ENABLE_BADBOTS %}
-           Include /etc/apache2/custom.d/globalblacklist.conf
-        {% endif %}
-       </Directory>
+   <Directory {{ APACHE_DOCUMENTROOT }}>
+      Options -Indexes +FollowSymLinks +MultiViews +Includes
+      AllowOverride All
+      Order allow,deny
+      allow from all
+   {% if APACHE_ENABLE_BADBOTS is defined and 'true' in APACHE_ENABLE_BADBOTS %}
+      Include /etc/apache2/custom.d/globalblacklist.conf
+   {% endif %}
+   </Directory>
 
-        {% if 'true' in APACHE_ENABLE_CSP %}
-        Header set Content-Security-Policy "{{ APACHE_CSP_HEADER }}"
-        {% endif %}
+{% if 'true' in APACHE_ENABLE_CSP %}
+   Header set Content-Security-Policy "{{ APACHE_CSP_HEADER }}"
+{% endif %}
 
-    <Files xmlrpc.php>
+   <Files xmlrpc.php>
 		order deny,allow
 		deny from all
             allow from 100.64.0.0/10
