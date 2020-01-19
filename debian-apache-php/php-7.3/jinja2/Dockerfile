@@ -61,8 +61,8 @@ RUN rm -f /etc/apache2/sites-available/000-default.conf \
 RUN a2dismod php${PHP_V} && \
     a2dismod mpm_prefork && \
     a2enmod mpm_event && \
-    a2enmod proxy proxy_http proxy_balancer && \
-    a2enmod headers proxy_fcgi auth_basic && \
+    #a2enmod proxy proxy_http proxy_balancer && \
+    a2enmod headers && \
     a2enconf php${PHP_V}-fpm
 
 
