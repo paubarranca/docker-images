@@ -16,4 +16,5 @@ else
   exec $@
 fi
 
-apachectl -D FOREGROUND && /etc/init.d/php${PHP_V}-fpm start
+/etc/init.d/php${PHP_V}-fpm start
+apachectl -D FOREGROUND
