@@ -71,4 +71,4 @@ WORKDIR /var/www/httpdocs
 
 EXPOSE 80
 
-CMD apachectl -D FOREGROUND 
+CMD apachectl -D FOREGROUND && /etc/init.d/php${PHP_V}-fpm start
