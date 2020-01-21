@@ -8,3 +8,5 @@ services:
       - /srv/apache/www:/var/www/httpdocs
     ports:
       - "80:80"
+    ENV:
+      

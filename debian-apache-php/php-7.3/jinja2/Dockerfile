@@ -29,6 +29,8 @@ RUN apt -y --no-install-recommends install apt-transport-https && \
     pip3 install jinja2 j2cli pip setuptools wheel && \
     apt install -yq --no-install-recommends \
     apache2 libapache2-mod-authnz-external \
+    php${PHP_V} php${PHP_V}-fpm \
+    php${PHP_V}-common \
     libapache2-mod-php${PHP_V} \
     php${PHP_V}-cli \
     php${PHP_V}-json \

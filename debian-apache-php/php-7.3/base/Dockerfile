@@ -11,6 +11,8 @@ RUN apt -y --no-install-recommends install apt-transport-https && \
     apt update && apt-get install -yq --no-install-recommends \
     apt-utils wget ca-certificates \
     apache2 libapache2-mod-authnz-external \
+    php${PHP_V} php${PHP_V}-fpm \
+    php${PHP_V}-common \
     libapache2-mod-php${PHP_V} \
     php${PHP_V}-cli \
     php${PHP_V}-json \
@@ -43,15 +45,6 @@ ADD /content/000-default.conf /etc/apache2/sites-available/
 
 RUN a2dissite 000-default && \
     a2ensite 000-default.conf
-
-RUN mkdir /etc/apache2/custom.d && \
-   wget https://github.com/mitchellkrogza/apache-ultimate-bad-bot-blocker/raw/master/Apache_2.4/custom.d/globalblacklist.conf -O /etc/apache2/custom.d/globalblacklist.conf && \
-   wget https://raw.githubusercontent.com/mitchellkrogza/apache-ultimate-bad-bot-blocker/master/Apache_2.4/custom.d/bad-referrer-words.conf -O /etc/apache2/custom.d/bad-referrer-words.conf && \
-   wget https://github.com/mitchellkrogza/apache-ultimate-bad-bot-blocker/raw/master/Apache_2.4/custom.d/blacklist-ips.conf -O /etc/apache2/custom.d/blacklist-ips.conf && \
-   touch /etc/apache2/custom.d/blacklist-user-agents.conf \
-         /etc/apache2/custom.d/whitelist-domains.conf \
-         /etc/apache2/custom.d/bad-referrer-words.conf \
-         /etc/apache2/custom.d/whitelist-ips.conf
 
 RUN mkdir -p /usr/local/scripts/
 ADD /content/scripts/ /usr/local/scripts/
