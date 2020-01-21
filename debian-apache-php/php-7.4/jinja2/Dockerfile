@@ -16,6 +16,8 @@ RUN wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
 RUN apt-get update && \
     apt -y --no-install-recommends install php${PHP_V} \
     apache2 libapache2-mod-authnz-external \
+    php${PHP_V} php${PHP_V}-fpm \
+    php${PHP_V}-common \
     libapache2-mod-php${PHP_V} \
     php${PHP_V}-cli \
     php${PHP_V}-json \

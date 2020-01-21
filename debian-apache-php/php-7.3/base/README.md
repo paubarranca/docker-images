@@ -1,4 +1,4 @@
-DEBIAN-APACHE-PHP
+Debian-apache-php
 -------------
 ![](https://img.shields.io/docker/cloud/automated/paubarranca/debian-apache-php) ![](https://img.shields.io/docker/pulls/paubarranca/debian-apache-php) ![](https://img.shields.io/docker/cloud/build/paubarranca/debian-apache-php)
 
@@ -10,7 +10,7 @@ Lightweight debian-apache image uses an apache server by default and php-fpm 7.3
     services:
       apache:
         container_name: apache
-        image: paubarranca/debian-apache-php:v7.3
+        image: paubarranca/debian-apache-php:v7.3-slim
         restart: always
         volumes:
           - /srv/apache/www:/var/www/httpdocs

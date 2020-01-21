@@ -11,6 +11,8 @@ ENV \
    KEEPALIVE_MAX_REQUESTS="10000"           \
    KEEPALIVE_TIMEOUT="650"                  \
    APACHE_ENABLE_CORS="false"               \
+   APACHE_ENABLE_CSP="false"                \
+   APACHE_CSP_HEADER="upgrade-insecure-requests; default-src * data: 'unsafe-eval' 'unsafe-inline'" \
    APACHE_MAX_REQUEST_WORKERS="250"         \
    APACHE_START_SERVERS="2"                 \
    APACHE_DOCUMENTROOT="/var/www/httpdocs/" \

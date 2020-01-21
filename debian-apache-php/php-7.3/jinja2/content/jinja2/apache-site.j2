@@ -2,7 +2,6 @@
 	ServerAdmin admin@localhost
    ServerName localhost
    DocumentRoot {{ APACHE_DOCUMENTROOT }}
-   DirectoryIndex {{ APACHE_DIRECTORY_INDEX }}
 
    <Directory {{ APACHE_DOCUMENTROOT }}>
       Options -Indexes +FollowSymLinks +MultiViews +Includes
