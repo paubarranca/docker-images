@@ -80,7 +80,8 @@ RUN mkdir /etc/apache2/custom.d && \
          /etc/apache2/custom.d/whitelist-ips.conf
 
 # Copy content
-RUN mkdir -p /usr/local/scripts/
+RUN mkdir -p /usr/local/scripts/ && \
+    mkdir -p /var/run/php
 ADD /content/scripts/ /usr/local/scripts/
 ADD /content/jinja2/ /root/jinja2/
 ADD /content/config/supervisord.conf /etc/supervisor/supervisord.conf

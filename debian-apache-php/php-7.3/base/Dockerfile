@@ -9,7 +9,7 @@ ENV PHP_V=7.3
 # Install dependencies
 RUN apt -y --no-install-recommends install apt-transport-https && \
     apt update && apt-get install -yq --no-install-recommends \
-    apt-utils wget ca-certificates \
+    apt-utils wget ca-certificates supervisor \
     apache2 libapache2-mod-authnz-external \
     php${PHP_V} php${PHP_V}-fpm \
     php${PHP_V}-common \
@@ -41,7 +41,9 @@ RUN apt -y --no-install-recommends install apt-transport-https && \
 RUN rm -f /etc/apache2/sites-available/000-default.conf \
     rm -f /etc/apache2/sites-available/default-ssl.conf \
     rm -rf /var/www/html
-ADD /content/000-default.conf /etc/apache2/sites-available/
+
+ADD /content/config/000-default.conf /etc/apache2/sites-available/
+ADD /content/config/supervisord.conf /etc/supervisor/supervisord.conf
 
 RUN a2dissite 000-default && \
     a2ensite 000-default.conf
@@ -57,5 +59,4 @@ WORKDIR /var/www/httpdocs
 
 EXPOSE 80
 
-CMD /etc/init.d/php${PHP_V}-fpm start
-CMD apachectl -D FOREGROUND
+CMD ["/usr/bin/supervisord","-n","-c","/etc/supervisor/supervisord.conf"]
