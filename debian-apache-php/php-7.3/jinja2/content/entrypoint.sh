@@ -15,6 +15,3 @@ if [[ "$#" < "1" ]]; then
 else
   exec $@
 fi
-
-/etc/init.d/php${PHP_V}-fpm start
-apachectl -D FOREGROUND
