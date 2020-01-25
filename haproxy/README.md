@@ -1,12 +1,11 @@
-HAPROXY
+haproxy
 -------------
+![](https://img.shields.io/docker/cloud/automated/paubarranca/debian-apache-php) ![](https://img.shields.io/docker/pulls/paubarranca/debian-apache-php) ![](https://img.shields.io/docker/cloud/build/paubarranca/debian-apache-php)
 
-The haproxy uses jinja2 and a YAML configuration file to automate the haproxy configuration, to set it up you have to put specific variables in the haproxy.yaml file and the entrypoint.sh script will create the haproxy.cfg based on these file.
+The haproxy images is based on alpine 3 and uses jinja2 and a YAML configuration file to automate the haproxy configuration, to set it up you have to put specific variables in the haproxy.yaml file and the entrypoint.sh script will create the haproxy.cfg based on these file.
 
 ### Docker-compose
-
-
-
+```yaml
     version: '3'
     services:
       haproxy:
@@ -19,6 +18,7 @@ The haproxy uses jinja2 and a YAML configuration file to automate the haproxy co
         ports:
             - "80:80"
             - "443:44"
+```
 
 ![docker-compose](https://user-images.githubusercontent.com/49031072/64709154-14d2b380-d4b6-11e9-8613-ee343a9e4cce.png)
 
