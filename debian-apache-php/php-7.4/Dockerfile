@@ -90,7 +90,6 @@ RUN mkdir -p /usr/local/scripts/ && \
     mkdir -p /var/run/php
 ADD /content/scripts/ /usr/local/scripts/
 ADD /content/jinja2/ /root/jinja2/
-ADD /content/config/supervisord.conf /etc/supervisor/supervisord.conf
 ADD /content/entrypoint.sh /root/entrypoint.sh
 RUN chmod 755 /root/entrypoint.sh
 
