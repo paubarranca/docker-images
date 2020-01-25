@@ -2,7 +2,7 @@ debian-apache-php
 -------------
 ![](https://img.shields.io/docker/cloud/automated/paubarranca/debian-apache-php) ![](https://img.shields.io/docker/pulls/paubarranca/debian-apache-php) ![](https://img.shields.io/docker/cloud/build/paubarranca/debian-apache-php)
 
-The debian-apache image uses an apache server, some useful apache modules, php-fpm version 7.4, and uses jinja to configure some parameters via environment variables (see the example).
+The debian-apache image uses an apache server, some useful apache modules, php-fpm version 7.4, and uses jinja to configure some parameters via environment variables [(see the example)](#docker-compose-with-env-variables).
 
 This docker image is meant to be used using only http, so it doesn't have any of the https related modules and features, be sure to architect the infraestructure with a tls-handler proxy between the client and the container.
 
@@ -31,7 +31,7 @@ services:
       - "80:80"
 ```
 
-### Docker-compose with env variables
+### [Docker-compose with env variables]
 
 ```yaml
 version: '3'
