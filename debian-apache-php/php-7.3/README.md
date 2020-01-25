@@ -1,8 +1,8 @@
-Debian-apache-php
+debian-apache-php
 -------------
 ![](https://img.shields.io/docker/cloud/automated/paubarranca/debian-apache-php) ![](https://img.shields.io/docker/pulls/paubarranca/debian-apache-php) ![](https://img.shields.io/docker/cloud/build/paubarranca/debian-apache-php)
 
-Lightweight debian-apache image uses an apache server by default and php-fpm 7.3 version
+The debian-apache image uses an apache server, some useful apache modules, php-fpm version 7.4, and uses jinja to configure some parameters via environment variables (see the example)
 
 ### Docker-compose
 
@@ -10,7 +10,7 @@ Lightweight debian-apache image uses an apache server by default and php-fpm 7.3
     services:
       apache:
         container_name: apache
-        image: paubarranca/debian-apache-php:v7.3-slim
+        image: paubarranca/debian-apache-php:v7.3
         restart: always
         volumes:
           - /srv/apache/www:/var/www/httpdocs

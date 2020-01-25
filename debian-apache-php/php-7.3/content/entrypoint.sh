@@ -5,6 +5,7 @@ j2 /root/jinja2/apache-conf.j2 > /etc/apache2/apache2.conf
 j2 /root/jinja2/apache-mpm.j2 > /etc/apache2/mods-enabled/mpm_event.conf
 j2 /root/jinja2/apache-site.j2 > /etc/apache2/sites-enabled/000-default.conf
 j2 /root/jinja2/apache-php-fpm-conf.j2 > /etc/apache2/conf-enabled/php${PHP_V}-fpm.conf
+j2 /root/jinja2/apache-remoteip.j2 > /etc/apache2/mods-enabled/remoteip.conf
 
 # PHP config files
 j2 /root/jinja2/php-fpm-conf.j2 > /etc/php/${PHP_V}/fpm/php-fpm.conf
