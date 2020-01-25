@@ -4,11 +4,10 @@ MAINTAINER Pau Barranca <paubarrancamon@gmail.com>
 LABEL name="paubarranca/debian-apache-php:v7.3"
 
 ENV DEBIAN_FRONTEND=noninteractive
-ENV PHP_V=7.4
 
 # Default jinja env variables
 ENV \ 
-   PHP_V="7.3"                              \
+   PHP_V="7.4"                              \
    KEEPALIVE_MAX_REQUESTS="10000"           \
    KEEPALIVE_TIMEOUT="650"                  \
    APACHE_ENABLE_CORS="false"               \
@@ -33,8 +32,10 @@ RUN wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
     echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/php.list
 
 # Install apache, PHP & jinja
-RUN apt-get update && \
-    apt -y --no-install-recommends install php${PHP_V} \
+RUN apt update && apt-get install -yq --no-install-recommends \
+    apt-utils wget python3-pip apt-transport-https supervisor && \
+    pip3 install jinja2 j2cli pip setuptools wheel && \
+    apt install -yq --no-install-recommends \
     apache2 libapache2-mod-authnz-external \
     php${PHP_V} php${PHP_V}-fpm \
     php${PHP_V}-common \
@@ -74,6 +75,7 @@ RUN a2dismod php${PHP_V} && \
     a2enmod proxy ssl proxy_http proxy_balancer rewrite headers actions proxy_fcgi alias expires auth_basic remoteip
 
 
+# Set Badbots blacklist
 RUN mkdir /etc/apache2/custom.d && \
    wget https://github.com/mitchellkrogza/apache-ultimate-bad-bot-blocker/raw/master/Apache_2.4/custom.d/globalblacklist.conf -O /etc/apache2/custom.d/globalblacklist.conf && \
    wget https://raw.githubusercontent.com/mitchellkrogza/apache-ultimate-bad-bot-blocker/master/Apache_2.4/custom.d/bad-referrer-words.conf -O /etc/apache2/custom.d/bad-referrer-words.conf && \
