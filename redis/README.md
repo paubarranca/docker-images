@@ -1,6 +1,6 @@
 redis
 -------------
-![](https://img.shields.io/docker/cloud/automated/paubarranca/debian-apache-php) ![](https://img.shields.io/docker/pulls/paubarranca/debian-apache-php) ![](https://img.shields.io/docker/cloud/build/paubarranca/debian-apache-php)
+![](https://img.shields.io/docker/cloud/automated/paubarranca/redis) ![](https://img.shields.io/docker/pulls/paubarranca/redis) ![](https://img.shields.io/docker/cloud/build/paubarranca/redis)
 
 This redis image is based on debian 10 and secured to launch all the processes as user redis and group redis.
 

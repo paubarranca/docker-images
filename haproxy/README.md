@@ -1,6 +1,6 @@
 haproxy
 -------------
-![](https://img.shields.io/docker/cloud/automated/paubarranca/debian-apache-php) ![](https://img.shields.io/docker/pulls/paubarranca/debian-apache-php) ![](https://img.shields.io/docker/cloud/build/paubarranca/debian-apache-php)
+![](https://img.shields.io/docker/cloud/automated/paubarranca/haproxy) ![](https://img.shields.io/docker/pulls/paubarranca/haproxy) ![](https://img.shields.io/docker/cloud/build/paubarranca/haproxy)
 
 The haproxy images is based on alpine 3 and uses jinja2 and a YAML configuration file to automate the haproxy configuration, to set it up you have to put specific variables in the haproxy.yaml file and the entrypoint.sh script will create the haproxy.cfg based on these file.
 
