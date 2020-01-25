@@ -33,6 +33,6 @@ error_log = {{ PHP_ERROR_LOG_PATH }}
 max_execution_time = {{ PHP_MAX_EXECUTION_TIME }}
 {% endif %}
 
-{% if PHP_SECURITY is defined and 'true' in PHP_SECURITY %}
+{% if PHP_SEC_DISABLE_FUNCTIONS is defined and 'true' in PHP_SEC_DISABLE_FUNCTIONS %}
 disable_functions = "exec,passthru,shell_exec,system,proc_open,popen,parse_ini_file,show_source"
 {% endif %}
