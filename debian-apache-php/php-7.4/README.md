@@ -31,7 +31,7 @@ services:
       - "80:80"
 ```
 
-### [Docker-compose with env variables]
+### Docker-compose with env variables
 
 ```yaml
 version: '3'
