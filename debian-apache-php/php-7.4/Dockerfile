@@ -4,15 +4,35 @@ MAINTAINER Pau Barranca <paubarrancamon@gmail.com>
 LABEL name="paubarranca/debian-apache-php:v7.3"
 
 ENV DEBIAN_FRONTEND=noninteractive
-ENV PHP_V=7.3
+ENV PHP_V=7.4
 
-# Install dependencies
+# Default jinja env variables
+ENV \ 
+   PHP_V="7.3"                              \
+   KEEPALIVE_MAX_REQUESTS="10000"           \
+   KEEPALIVE_TIMEOUT="650"                  \
+   APACHE_ENABLE_CORS="false"               \
+   APACHE_ENABLE_CSP="false"                \
+   APACHE_CSP_HEADER="upgrade-insecure-requests; default-src * data: 'unsafe-eval' 'unsafe-inline'" \
+   APACHE_MAX_REQUEST_WORKERS="256"         \
+   APACHE_START_SERVERS="2"                 \
+   APACHE_DOCUMENTROOT="/var/www/httpdocs/" \
+   APACHE_DIRECTORY_INDEX="index.php"       \
+   APACHE_ENABLE_BADBOTS="false"            \
+   APACHE_ENABLE_CSP="false"                \
+   PHP_MEM_LIMIT="128M"                     \
+   PHP_DISPLAY_ERRORS="on"                  \
+   PHP_ERROR_LOG_PATH="/dev/stdout"         \
+   PHP_MAX_EXECUTION_TIME="60"              
+
+# Install pre-PHP installation packages
 RUN apt update && \
     apt -y --no-install-recommends install lsb-release curl wget ca-certificates
 
 RUN wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg && \
     echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/php.list
 
+# Install apache, PHP & jinja
 RUN apt-get update && \
     apt -y --no-install-recommends install php${PHP_V} \
     apache2 libapache2-mod-authnz-external \
@@ -42,14 +62,17 @@ RUN apt-get update && \
     ln -sf /dev/stdout /var/log/apache2/access.log && \
     ln -sf /dev/stdout /var/log/apache2/error.log
 
-# Copy modified vHost
+# Delete default apache site conf
 RUN rm -f /etc/apache2/sites-available/000-default.conf \
     rm -f /etc/apache2/sites-available/default-ssl.conf \
     rm -rf /var/www/html
-ADD /content/000-default.conf /etc/apache2/sites-available/
 
-RUN a2dissite 000-default && \
-    a2ensite 000-default.conf
+# PHP module it's not compatible with mpm_event module
+RUN a2dismod php${PHP_V} && \
+    a2dismod mpm_prefork && \
+    a2enmod mpm_event && \
+    a2enmod proxy ssl proxy_http proxy_balancer rewrite headers actions proxy_fcgi alias expires auth_basic remoteip
+
 
 RUN mkdir /etc/apache2/custom.d && \
    wget https://github.com/mitchellkrogza/apache-ultimate-bad-bot-blocker/raw/master/Apache_2.4/custom.d/globalblacklist.conf -O /etc/apache2/custom.d/globalblacklist.conf && \
@@ -60,15 +83,21 @@ RUN mkdir /etc/apache2/custom.d && \
          /etc/apache2/custom.d/bad-referrer-words.conf \
          /etc/apache2/custom.d/whitelist-ips.conf
 
-RUN mkdir -p /usr/local/scripts/
+# Copy content
+RUN mkdir -p /usr/local/scripts/ && \
+    mkdir -p /var/run/php
 ADD /content/scripts/ /usr/local/scripts/
+ADD /content/jinja2/ /root/jinja2/
+ADD /content/config/supervisord.conf /etc/supervisor/supervisord.conf
+ADD /content/entrypoint.sh /root/entrypoint.sh
+RUN chmod 755 /root/entrypoint.sh
 
 # Implement health-check
 HEALTHCHECK --retries=3 --interval=5s --timeout=3s \
     CMD /usr/bin/php${PHP_V} /usr/local/scripts/health-check.php
 
-WORKDIR /var/www/httpdocs
+WORKDIR ${APACHE_DOCUMENTROOT}
 
 EXPOSE 80
 
-CMD apachectl -D FOREGROUND && /etc/init.d/php${PHP_V}-fpm start
+ENTRYPOINT ["/root/entrypoint.sh"]

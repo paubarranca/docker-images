@@ -1,0 +1,37 @@
+<VirtualHost *:80>
+	ServerAdmin admin@localhost
+   ServerName localhost
+   DocumentRoot {{ APACHE_DOCUMENTROOT }}
+
+   <Directory {{ APACHE_DOCUMENTROOT }}>
+      Options -Indexes +FollowSymLinks +MultiViews +Includes
+      AllowOverride All
+      Order allow,deny
+      allow from all
+   {% if APACHE_ENABLE_BADBOTS is defined and 'true' in APACHE_ENABLE_BADBOTS %}
+      Include /etc/apache2/custom.d/globalblacklist.conf
+   {% endif %}
+   </Directory>
+
+{% if 'true' in APACHE_ENABLE_CSP %}
+   Header set Content-Security-Policy "{{ APACHE_CSP_HEADER }}"
+{% endif %}
+
+   <Files xmlrpc.php>
+		order deny,allow
+		deny from all
+            allow from 100.64.0.0/10
+            allow from 172.16.0.0/12
+            allow from 10.0.0.0/8
+            allow from 192.168.0.0/16
+	</Files>
+
+        SetEnvIf Request_URI "/health-check" dontlog
+        SetEnvIf Request_URI "/phpfpm-status.*" dontlog
+        SetEnvIf Request_URL "/server-status.*" dontlog
+        SetEnvIf Remote_Addr "127\.0\.0\.1" dontlog
+
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+</VirtualHost>

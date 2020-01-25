@@ -23,7 +23,7 @@ This docker image is meant to be used using only http, so it doesn't have any of
     services:
       apache:
         container_name: apache
-        image: paubarranca/debian-apache-php:v7.3
+        image: paubarranca/debian-apache-php:v7.4
         restart: always
         volumes:
           - /srv/apache/www:/var/www/httpdocs
@@ -38,7 +38,7 @@ This docker image is meant to be used using only http, so it doesn't have any of
     services:
       apache:
         container_name: apache
-        image: paubarranca/debian-apache-php:v7.3
+        image: paubarranca/debian-apache-php:v7.4
         restart: always
         volumes:
           - /srv/apache/www:/var/www/httpdocs
@@ -83,6 +83,8 @@ This docker image is meant to be used using only http, so it doesn't have any of
           - PHP_SECURITY="false"
 
 ```
+
+
 
 
 ![docker-compose](https://user-images.githubusercontent.com/49031072/64709154-14d2b380-d4b6-11e9-8613-ee343a9e4cce.png)

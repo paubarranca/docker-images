@@ -13,7 +13,7 @@ ENV \
    APACHE_ENABLE_CORS="false"               \
    APACHE_ENABLE_CSP="false"                \
    APACHE_CSP_HEADER="upgrade-insecure-requests; default-src * data: 'unsafe-eval' 'unsafe-inline'" \
-   APACHE_MAX_REQUEST_WORKERS="250"         \
+   APACHE_MAX_REQUEST_WORKERS="256"         \
    APACHE_START_SERVERS="2"                 \
    APACHE_DOCUMENTROOT="/var/www/httpdocs/" \
    APACHE_DIRECTORY_INDEX="index.php"       \

@@ -1,0 +1,28 @@
+<IfModule proxy_fcgi_module>
+
+    # Enable http authorization headers
+    <IfModule setenvif_module>
+    SetEnvIfNoCase ^Authorization$ "(.+)" HTTP_AUTHORIZATION=$1
+    </IfModule>
+
+    <LocationMatch "^(/phpfpm-status|health-check)$">
+        SetHandler "proxy:unix:/var/run/php/php{{ PHP_V }}-fpm.sock|fcgi://localhost" 
+    </LocationMatch>
+
+    <FilesMatch ".+\.ph(p[3457]?|t|tml)$">
+        SetHandler "proxy:unix:/var/run/php/php{{ PHP_V }}-fpm.sock|fcgi://localhost/"
+    </FilesMatch>
+
+    <FilesMatch ".+\.phps$">
+        # Deny access to raw php sources by default
+        # To re-enable it's recommended to enable access to the files
+        # only in specific virtual host or directory
+        Require all denied
+    </FilesMatch>
+
+    # Deny access to files without filename (e.g. '.php')
+    <FilesMatch "^\.ph(p[3457]?|t|tml|ps)$">
+        Require all denied
+    </FilesMatch>
+
+</IfModule>

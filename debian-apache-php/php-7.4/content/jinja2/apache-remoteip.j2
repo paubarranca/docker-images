@@ -1,0 +1,13 @@
+LoadModule remoteip_module /usr/lib/apache2/modules/mod_remoteip.so
+<IfModule remoteip_module>
+
+    RemoteIPHeader X-Forwarded-For
+
+    # Define the proxies that send the correct X-Forwarded-For headers
+    {% if APACHE_REMOTEIP_PROXY_RANGE is defined %}
+    RemoteIPInternalProxy 127.2.0.0/8 ::1 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16 100.64.0.0/10 35.186.0.0/16 35.191.0.0/16 130.211.0.0/16 {{ APACHE_REMOTEIP_PROXY_RANGE }}
+    {% else %}
+    RemoteIPInternalProxy 127.2.0.0/8 ::1 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16 100.64.0.0/10 35.186.0.0/16 35.191.0.0/16 130.211.0.0/16
+    {% endif %}
+
+</IfModule>

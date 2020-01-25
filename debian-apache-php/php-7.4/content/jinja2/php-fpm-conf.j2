@@ -1,0 +1,33 @@
+;;;;;;;;;;;;;;;;;;;;;
+; FPM Configuration ;
+;;;;;;;;;;;;;;;;;;;;;
+
+; All relative paths in this configuration file are relative to PHP's install
+; prefix (/usr). This prefix can be dynamically changed by using the
+; '-p' argument from the command line.
+
+;;;;;;;;;;;;;;;;;;
+; Global Options ;
+;;;;;;;;;;;;;;;;;;
+
+[global]
+pid = /var/run/php/php{{ PHP_V }}-fpm.pid
+
+error_log = {{ PHP_ERROR_LOG_PATH }}
+
+;;;;;;;;;;;;;;;;;;;;
+; Pool Definitions ;
+;;;;;;;;;;;;;;;;;;;;
+
+; Multiple pools of child processes may be started with different listening
+; ports and different management options.  The name of the pool will be
+; used in logs and stats. There is no limitation on the number of pools which
+; FPM can handle. Your system will tell you anyway :)
+
+; Include one or more files. If glob(3) exists, it is used to include a bunch of
+; files from a glob(3) pattern. This directive can be used everywhere in the
+; file.
+; Relative path can also be used. They will be prefixed by:
+;  - the global prefix if it's been set (-p argument)
+;  - /usr otherwise
+include=/etc/php/{{ PHP_V }}/fpm/pool.d/*.conf
