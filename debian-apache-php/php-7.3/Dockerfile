@@ -21,7 +21,7 @@ ENV \
    APACHE_ENABLE_CSP="false"                \
    PHP_MEM_LIMIT="128M"                     \
    PHP_DISPLAY_ERRORS="on"                  \
-   PHP_ERROR_LOG_PATH="/dev/stdout/"        \
+   PHP_ERROR_LOG_PATH="/dev/stdout"        \
    PHP_MAX_EXECUTION_TIME="60"              
 
 # Install apache, PHP & jinja
