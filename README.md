@@ -1,9 +1,7 @@
-Custom Docker Images 
+Docker Images 
 =============
 
-This repository contains Dockerfiles to create custom images and the resources that i use to create them, including scripts, config files... 
+This repository contains Dockerfiles that create custom images and the resources I used to create them (scripts, config...)
 
-All the images are available in Docker Hub at [paubarranca](https://hub.docker.com/?namespace=paubarranca), feel free to use them ;)
-
-Please use a tagged image that works for you as v1, v2... DO NOT USE the latest tag in any of the images!
+All the images are available in [Docker Hub](https://hub.docker.com/?namespace=paubarranca), feel free to use them ;)
 

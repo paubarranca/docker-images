@@ -1,0 +1,24 @@
+server {
+        listen 80 default_server;
+        listen [::]:80 default_server;
+
+        root {{ NGINX_DOCUMENTROOT }};
+        index index.html index.htm index.php;
+
+        server_name localhost;
+
+        location / {
+                try_files $uri $uri/ =404;
+        }
+
+        location ~ \.php$ {
+                try_files $uri =404;
+                include snippets/fastcgi-php.conf;
+        
+                fastcgi_pass unix:/var/run/php/php{{ PHP_V }}-fpm.sock;
+        }
+
+        location ~ /\.ht {
+               deny all;
+        }
+}

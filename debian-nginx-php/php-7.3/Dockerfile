@@ -1,46 +1,26 @@
 FROM debian:buster-slim
 
 MAINTAINER Pau Barranca <paubarrancamon@gmail.com>
-LABEL name="paubarranca/debian-apache-php:v7.3"
+LABEL name="paubarranca/debian-nginx-php:v7.3"
 
 ENV DEBIAN_FRONTEND=noninteractive
-ENV BUILD_PACKAGES="curl wget"
+ENV BUILD_PACKAGES="curl gcc make autoconf wget"
 
 # Default jinja env variables
 ENV \ 
-   PHP_V="7.4"                              \
-   KEEPALIVE_MAX_REQUESTS="10000"           \
-   KEEPALIVE_TIMEOUT="650"                  \
-   APACHE_ENABLE_CORS="false"               \
-   APACHE_ENABLE_CSP="false"                \
-   APACHE_CSP_HEADER="upgrade-insecure-requests; default-src * data: 'unsafe-eval' 'unsafe-inline'" \
-   APACHE_MAX_REQUEST_WORKERS="256"         \
-   APACHE_START_SERVERS="2"                 \
-   APACHE_DOCUMENTROOT="/var/www/httpdocs/" \
-   APACHE_DIRECTORY_INDEX="index.php"       \
-   APACHE_ENABLE_BADBOTS="false"            \
-   APACHE_ENABLE_CSP="false"                \
+   PHP_V="7.3"                              \
    PHP_MEM_LIMIT="128M"                     \
    PHP_DISPLAY_ERRORS="on"                  \
    PHP_ERROR_LOG_PATH="/dev/stdout"         \
-   PHP_MAX_EXECUTION_TIME="60"              
+   PHP_MAX_EXECUTION_TIME="60"              \
+   NGINX_DOCUMENTROOT="/var/www/httpdocs"   \
+         
 
-# Install pre-PHP installation packages
-RUN apt update && \
-    apt -y --no-install-recommends install ca-certificates lsb-release ${BUILD_PACKAGES}
-
-RUN wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg && \
-    echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/php.list
-
-# Install apache, PHP & jinja
+# Install nginx, PHP & jinja
 RUN apt update && apt install -yq --no-install-recommends \
-    apt-utils wget python3-pip apt-transport-https supervisor && \
-    pip3 install jinja2 j2cli pip setuptools wheel && \
-    apt install -yq --no-install-recommends \
-    apache2 libapache2-mod-authnz-external \
+    ${BUILD_PACKAGES} gnupg2 wget apt-transport-https lsb-release ca-certificates nginx nginx-common libnginx-mod-http-geoip libgeoip1 supervisor && \
     php${PHP_V} php${PHP_V}-fpm \
     php${PHP_V}-common \
-    libapache2-mod-php${PHP_V} \
     php${PHP_V}-cli \
     php${PHP_V}-json \
     php${PHP_V}-curl \
@@ -54,15 +34,12 @@ RUN apt update && apt install -yq --no-install-recommends \
     php${PHP_V}-xml \
     php${PHP_V}-zip \
     php${PHP_V}-intl \
-    php-imagick && \
-    apt clean && rm -rf /var/lib/apt/lists/* \
+    php${PHP_V}-cgi \
+    php-imagick \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* \
 
     # Install PHP composer
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
-
-    # Enforce apache to send logs to stdout
-    ln -sf /dev/stdout /var/log/apache2/access.log && \
-    ln -sf /dev/stdout /var/log/apache2/error.log
 
 # Delete default apache site conf
 RUN rm -f /etc/apache2/sites-available/000-default.conf \
@@ -91,16 +68,13 @@ RUN mkdir -p /usr/local/scripts/ && \
     mkdir -p /var/run/php
 ADD /content/scripts/ /usr/local/scripts/
 ADD /content/jinja2/ /root/jinja2/
+ADD /content/config/supervisord.conf /etc/supervisor/supervisord.conf
 ADD /content/entrypoint.sh /root/entrypoint.sh
 RUN chmod 755 /root/entrypoint.sh
-
-# Cleanup
-RUN apt purge -y ${BUILD_PACKAGES}
 
 # Implement health-check
 HEALTHCHECK --retries=3 --interval=5s --timeout=3s \
     CMD /usr/bin/php${PHP_V} /usr/local/scripts/health-check.php
-
 
 WORKDIR ${APACHE_DOCUMENTROOT}
 

@@ -1,9 +1,10 @@
-FROM debian:10.2-slim
+FROM debian:buster-slim
 
 MAINTAINER Pau Barranca <paubarrancamon@gmail.com>
 LABEL name="paubarranca/debian-apache-php:v7.3"
 
 ENV DEBIAN_FRONTEND=noninteractive
+ENV BUILD_PACKAGES="wget"
 
 # Default jinja env variables
 ENV \ 
@@ -25,8 +26,8 @@ ENV \
    PHP_MAX_EXECUTION_TIME="60"              
 
 # Install apache, PHP & jinja
-RUN apt update && apt-get install -yq --no-install-recommends \
-    apt-utils wget python3-pip apt-transport-https supervisor && \
+RUN apt update && apt install -yq --no-install-recommends \
+    apt-utils ${BUILD_PACKAGES} python3-pip apt-transport-https supervisor && \
     pip3 install jinja2 j2cli pip setuptools wheel && \
     apt install -yq --no-install-recommends \
     apache2 libapache2-mod-authnz-external \
@@ -67,7 +68,6 @@ RUN a2dismod php${PHP_V} && \
     a2enmod mpm_event && \
     a2enmod proxy ssl proxy_http proxy_balancer rewrite headers actions proxy_fcgi alias expires auth_basic remoteip
 
-
 # Set Badbots blacklist
 RUN mkdir /etc/apache2/custom.d && \
    wget https://github.com/mitchellkrogza/apache-ultimate-bad-bot-blocker/raw/master/Apache_2.4/custom.d/globalblacklist.conf -O /etc/apache2/custom.d/globalblacklist.conf && \
@@ -83,9 +83,11 @@ RUN mkdir -p /usr/local/scripts/ && \
     mkdir -p /var/run/php
 ADD /content/scripts/ /usr/local/scripts/
 ADD /content/jinja2/ /root/jinja2/
-ADD /content/config/supervisord.conf /etc/supervisor/supervisord.conf
 ADD /content/entrypoint.sh /root/entrypoint.sh
 RUN chmod 755 /root/entrypoint.sh
+
+# Cleanup
+RUN apt purge -y ${BUILD_PACKAGES}
 
 # Implement health-check
 HEALTHCHECK --retries=3 --interval=5s --timeout=3s \
