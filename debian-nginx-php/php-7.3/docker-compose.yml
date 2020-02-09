@@ -1,0 +1,10 @@
+version: '3'
+services:
+  apache:
+    container_name: nginx
+    image: paubarranca/debian-nginx-php:v7.3
+    restart: always
+    volumes:
+      - /srv/nginx/www:/var/www/httpdocs
+    ports:
+      - "80:80"
