@@ -17,5 +17,3 @@ services:
     ports:
         - "6379:6379"
 ```
-
-![docker-compose](https://user-images.githubusercontent.com/49031072/64709154-14d2b380-d4b6-11e9-8613-ee343a9e4cce.png)
