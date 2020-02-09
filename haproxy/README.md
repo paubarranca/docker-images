@@ -4,6 +4,8 @@ haproxy
 
 The haproxy images is based on alpine 3 and uses jinja2 and a YAML configuration file to automate the haproxy configuration, to set it up you have to put specific variables in the haproxy.yaml file and the entrypoint.sh script will create the haproxy.cfg based on these file.
 
+![haproxy](https://www.ochobitshacenunbyte.com/wp-content/uploads/2019/12/logo-haproxy.png)
+
 ### Docker-compose
 ```yaml
     version: '3'

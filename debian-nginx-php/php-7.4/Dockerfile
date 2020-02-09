@@ -7,7 +7,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 # Default jinja env variables
 ENV \ 
-   PHP_V="7.3"                              \
+   PHP_V="7.4"                              \
    PHP_MEM_LIMIT="128M"                     \
    PHP_DISPLAY_ERRORS="on"                  \
    PHP_ERROR_LOG_PATH="/dev/stdout"         \
@@ -24,7 +24,10 @@ ENV \
    # NGINX_PROXY_LOCAL_PATH
    # NGINX_PROXY_LOCAL_CONTENT_PATH
    # NGINX_PROXY_PASS_PATH
-         
+
+RUN wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg && \
+    echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/php.list
+      
 # Install nginx, PHP & jinja
 RUN apt update && apt install -yq --no-install-recommends \
     curl wget apt-utils gnupg2 python3-pip apt-transport-https lsb-release ca-certificates supervisor && \

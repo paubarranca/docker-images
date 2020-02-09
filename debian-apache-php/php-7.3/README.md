@@ -6,6 +6,8 @@ The debian-apache image is based on debian 10 and uses an apache server, some us
 
 This docker image is meant to be used using only http, so it doesn't have any of the https related modules and features, be sure to architect the infraestructure with a tls-handler proxy between the client and the container.
 
+![apache](https://zdnet4.cbsistatic.com/hub/i/2019/04/03/9b318728-bf96-4c85-9130-0655cc6a31f9/apache-web-server-logo.png)
+
 ### Fully explained references
 
 * [CORS(Acces Control Origin Headers)](https://developer.mozilla.org/es/docs/Web/HTTP/Access_control_CORS)

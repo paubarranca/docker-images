@@ -4,6 +4,8 @@ redis
 
 This redis image is based on debian 10 and secured to launch all the processes as user redis and group redis.
 
+![redis](https://www.ks7000.net.ve/wp-content/uploads/2019/08/Redis-logotipo.png)
+
 ### Docker-compose
 ```yaml
 version: '3'
