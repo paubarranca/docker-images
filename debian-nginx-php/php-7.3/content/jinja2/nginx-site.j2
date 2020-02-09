@@ -8,14 +8,50 @@ server {
         server_name localhost;
 
         location / {
-                try_files $uri $uri/ =404;
+            try_files $uri $uri/ =404;
         }
+
+        {% if NGINX_ENABLE_BADBOTS is defined and 'true' in NGINX_ENABLE_BADBOTS %}
+            
+        include /etc/nginx/bots.d/blockbots.conf;
+        include /etc/nginx/bots.d/ddos.conf;
+
+        {% endif %}
+
+        {% if NGINX_PROXY is defined and 'true' in NGINX_PROXY %}
+
+        {% if NGINX_PROXY_ENABLE_STATIC_CONTENT is defined and 'true' in NGINX_PROXY_ENABLE_STATIC_CONTENT %}
+            
+        location ~ ^/(images|javascript|js|css|flash|media|static)/  {
+            root {{ NGINX_PROXY_STATIC_CONTENT_PATH }};
+            expires 30d;
+        }
+
+        location / {
+            proxy_pass {{ NGINX_PROXY_PASS_HOST }};
+        }
+
+        {% else %}
+
+        location {{ NGINX_PROXY_LOCAL_PATH }}  {
+        root {{ NGINX_PROXY_LOCAL_CONTENT_PATH }};
+        expires 30d;
+        }
+
+        location {{ NGINX_PROXY_PASS_PATH }} {
+            proxy_pass {{ NGINX_PROXY_PASS_HOST }};
+        }
+
+        {% endif %}
+
+        {% endif %}
 
         location ~ \.php$ {
                 try_files $uri =404;
                 include snippets/fastcgi-php.conf;
         
                 fastcgi_pass unix:/var/run/php/php{{ PHP_V }}-fpm.sock;
+                fastcgi_index index.php;
         }
 
         location ~ /\.ht {

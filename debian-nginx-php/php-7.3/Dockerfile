@@ -13,12 +13,25 @@ ENV \
    PHP_DISPLAY_ERRORS="on"                  \
    PHP_ERROR_LOG_PATH="/dev/stdout"         \
    PHP_MAX_EXECUTION_TIME="60"              \
-   NGINX_DOCUMENTROOT="/var/www/httpdocs"   \
+   NGINX_DOCUMENTROOT="/var/www/httpdocs/"  \
+   NGINX_WORKER_PROCESSES="auto"            \
+   NGINX_WORKER_CONNECTIONS="4096"          \
+   KEEPALIVE_TIMEOUT="65"                   \
+   NGINX_ENABLE_BADBOTS="false"             \
+   NGINX_PROXY="false"
+   # NGINX_PROXY_ENABLE_STATIC_CONTENT
+   # NGINX_PROXY_STATIC_CONTENT_PATH
+   # NGINX_PROXY_PASS_HOST
+   # NGINX_PROXY_LOCAL_PATH
+   # NGINX_PROXY_LOCAL_CONTENT_PATH
+   # NGINX_PROXY_PASS_PATH
          
-
 # Install nginx, PHP & jinja
 RUN apt update && apt install -yq --no-install-recommends \
-    ${BUILD_PACKAGES} gnupg2 wget apt-transport-https lsb-release ca-certificates nginx nginx-common libnginx-mod-http-geoip libgeoip1 supervisor && \
+    ${BUILD_PACKAGES} apt-utils gnupg2 python3-pip apt-transport-https lsb-release ca-certificates supervisor && \
+    pip3 install jinja2 j2cli pip setuptools wheel && \
+    apt install -yq --no-install-recommends \
+    nginx nginx-common libnginx-mod-http-geoip libgeoip1 \
     php${PHP_V} php${PHP_V}-fpm \
     php${PHP_V}-common \
     php${PHP_V}-cli \
@@ -41,42 +54,31 @@ RUN apt update && apt install -yq --no-install-recommends \
     # Install PHP composer
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
 
-# Delete default apache site conf
-RUN rm -f /etc/apache2/sites-available/000-default.conf \
-    rm -f /etc/apache2/sites-available/default-ssl.conf \
-    rm -rf /var/www/html
-
-# PHP module it's not compatible with mpm_event module
-RUN a2dismod php${PHP_V} && \
-    a2dismod mpm_prefork && \
-    a2enmod mpm_event && \
-    a2enmod proxy ssl proxy_http proxy_balancer rewrite headers actions proxy_fcgi alias expires auth_basic remoteip
-
+    # Enforce nginx to send logs to stdout
+    ln -sf /dev/stdout /var/log/nginx/access.log && \
+    ln -sf /dev/stdout /var/log/nginx/error.log
 
 # Set Badbots blacklist
-RUN mkdir /etc/apache2/custom.d && \
-   wget https://github.com/mitchellkrogza/apache-ultimate-bad-bot-blocker/raw/master/Apache_2.4/custom.d/globalblacklist.conf -O /etc/apache2/custom.d/globalblacklist.conf && \
-   wget https://raw.githubusercontent.com/mitchellkrogza/apache-ultimate-bad-bot-blocker/master/Apache_2.4/custom.d/bad-referrer-words.conf -O /etc/apache2/custom.d/bad-referrer-words.conf && \
-   wget https://github.com/mitchellkrogza/apache-ultimate-bad-bot-blocker/raw/master/Apache_2.4/custom.d/blacklist-ips.conf -O /etc/apache2/custom.d/blacklist-ips.conf && \
-   touch /etc/apache2/custom.d/blacklist-user-agents.conf \
-         /etc/apache2/custom.d/whitelist-domains.conf \
-         /etc/apache2/custom.d/bad-referrer-words.conf \
-         /etc/apache2/custom.d/whitelist-ips.conf
+RUN mkdir -p /etc/nginx/bots.d && mkdir -p /usr/local/sbin/ && \
+    wget https://raw.githubusercontent.com/mitchellkrogza/nginx-ultimate-bad-bot-blocker/master/install-ngxblocker -O /usr/local/sbin/install-ngxblocker && \
+    chmod 755 /usr/local/sbin/install-ngxblocker
 
 # Copy content
 RUN mkdir -p /usr/local/scripts/ && \
     mkdir -p /var/run/php
 ADD /content/scripts/ /usr/local/scripts/
 ADD /content/jinja2/ /root/jinja2/
-ADD /content/config/supervisord.conf /etc/supervisor/supervisord.conf
 ADD /content/entrypoint.sh /root/entrypoint.sh
 RUN chmod 755 /root/entrypoint.sh
+
+# Cleanup
+RUN apt purge -y ${BUILD_PACKAGES}
 
 # Implement health-check
 HEALTHCHECK --retries=3 --interval=5s --timeout=3s \
     CMD /usr/bin/php${PHP_V} /usr/local/scripts/health-check.php
 
-WORKDIR ${APACHE_DOCUMENTROOT}
+WORKDIR ${NGINX_DOCUMENTROOT}
 
 EXPOSE 80
 
