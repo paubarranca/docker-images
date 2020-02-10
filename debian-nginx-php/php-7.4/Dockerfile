@@ -1,7 +1,7 @@
 FROM debian:buster-slim
 
 MAINTAINER Pau Barranca <paubarrancamon@gmail.com>
-LABEL name="paubarranca/debian-nginx-php:v7.3"
+LABEL name="paubarranca/debian-nginx-php:v7.4"
 
 ENV DEBIAN_FRONTEND=noninteractive
 
