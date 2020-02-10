@@ -2,7 +2,7 @@ version: '3'
 services:
   apache:
     container_name: nginx
-    image: paubarranca/debian-nginx-php:v7.3
+    image: paubarranca/debian-nginx-php:v7.4
     restart: always
     volumes:
       - /srv/nginx/www:/var/www/httpdocs

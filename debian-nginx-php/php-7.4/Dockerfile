@@ -25,12 +25,16 @@ ENV \
    # NGINX_PROXY_LOCAL_CONTENT_PATH
    # NGINX_PROXY_PASS_PATH
 
+# Install pre-PHP installation packages
+RUN apt update && \
+    apt -y --no-install-recommends install ca-certificates lsb-release curl wget
+
 RUN wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg && \
     echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/php.list
       
 # Install nginx, PHP & jinja
 RUN apt update && apt install -yq --no-install-recommends \
-    curl wget apt-utils gnupg2 python3-pip apt-transport-https lsb-release ca-certificates supervisor && \
+    apt-utils gnupg2 python3-pip apt-transport-https supervisor && \
     pip3 install jinja2 j2cli pip setuptools wheel && \
     apt install -yq --no-install-recommends \
     nginx nginx-common libnginx-mod-http-geoip libgeoip1 \
